@@ -3,19 +3,19 @@
 SRC=${PWD}
 
 function install_rust() {
-  cd ${HOME}
+  cd "${HOME}" || exit 1
   sudo apt install build-essential -y
   curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
-  source ${HOME}/.cargo/env
+  source "${HOME}"/.cargo/env
   cargo install eza
   cargo install topgrade
   cargo install bottom
   cargo install bat
 
   mkdir -p .config/bottom
-  cp ${SRC}/.config/bottom/bottom.toml .config/bottom
-  cp ${SRC}/.config/topgrade.toml .config/
-  cd -
+  cp "${SRC}"/.config/bottom/bottom.toml .config/bottom
+  cp "${SRC}"/.config/topgrade.toml .config/
+  cd - || exit 1
 }
 
 function install_vscode() {
@@ -24,12 +24,12 @@ function install_vscode() {
 }
 
 function install_go() {
-  cd "${HOME}"
+  cd "${HOME}" || exit 1
   local go_version="1.20"
 
   wget "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz"
   rm -rf "${HOME}/go" && tar -xzf go${go_version}.linux-amd64.tar.gz
-  cd -
+  cd - || exit 1
 }
 
 function install_tmux() {
@@ -43,14 +43,14 @@ function install_zsh() {
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
 
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  git clone https://github.com/sobolevn/wakatime-zsh-plugin.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/wakatime
+  git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
+  git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/wakatime
 
-  source ${HOME}/.zshrc
+  source "${HOME}/.zshrc"
 }
 
 function install_fzf() {
-  git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf
-  ${HOME}/.fzf/install
+  git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}"/.fzf
+  "${HOME}"/.fzf/install
 }
