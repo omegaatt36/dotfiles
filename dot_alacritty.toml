@@ -1,5 +1,5 @@
 [window]
-padding = { x = 5, y = 5 }
+padding = { x = 5}
 startup_mode = "Maximized"
 opacity = 0.85
 
