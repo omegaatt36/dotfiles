@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC=${PWD}
+_SCRIPTDIR="${HOME}/dotfiles/.script"
 
 function install_rust() {
   cd "${HOME}" || exit 1
@@ -13,8 +13,8 @@ function install_rust() {
   cargo install bat
 
   mkdir -p .config/bottom
-  cp "${SRC}"/.config/bottom/bottom.toml .config/bottom
-  cp "${SRC}"/.config/topgrade.toml .config/
+  cp "${_SCRIPTDIR}"/.config/bottom/bottom.toml .config/bottom
+  cp "${_SCRIPTDIR}"/.config/topgrade.toml .config/
   cd - || exit 1
 }
 
