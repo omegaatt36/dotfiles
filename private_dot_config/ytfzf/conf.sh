@@ -1,0 +1,9 @@
+is_loop=1
+show_thumbnails=1
+async_thumbnails=1
+scrape="youtube"
+search_result_type="all"
+search_region="TW"
+#invidious_instance="https://yewtu.be"
+ytdl_opts="--config-location ~/.config/yt-dlp/config"
+is_audio_only=1
