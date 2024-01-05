@@ -40,7 +40,7 @@ function install_tmux() {
 
 function install_zsh() {
   sudo apt install git curl zsh -y
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
 
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
   git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
@@ -48,7 +48,15 @@ function install_zsh() {
   git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/wakatime
   git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin
 
-  source "${HOME}/.zshrc"
+  ./bin/chezmoi update --force
+  zsh -c 'source "${HOME}/.zshrc"; exec zsh'
+}
+
+function install_vimplugin() {
+  curl -fLo "${HOME}"/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+  vim +'PlugInstall --sync' +qa
 }
 
 function install_fzf() {
