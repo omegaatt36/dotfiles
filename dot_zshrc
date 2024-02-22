@@ -73,6 +73,10 @@ then
   alias gb='fzf-git-branch'
   alias gco='fzf-git-checkout'
 fi
+if command -v zoxide &> /dev/null;
+then
+   eval "$(zoxide init zsh)"
+fi
 
 # leetgo
 export LEETCODE_SESSION=
@@ -90,3 +94,4 @@ if command -v argocd &> /dev/null; then source <(argocd completion zsh) compdef 
 
 # helm
 if command -v helm &> /dev/null; then source <(helm completion zsh) ; fi
+

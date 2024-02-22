@@ -11,6 +11,7 @@ function install_rust() {
   cargo install topgrade
   cargo install bottom
   cargo install bat
+  cargo install zoxide
 
   mkdir -p .config/bottom
   cp "${_SCRIPTDIR}"/.config/bottom/bottom.toml .config/bottom
