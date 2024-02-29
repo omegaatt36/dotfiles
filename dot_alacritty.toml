@@ -1,5 +1,5 @@
 [window]
-padding = { x = 5}
+padding = { x = 18, y = 2 }
 startup_mode = "Maximized"
 opacity = 0.85
 
@@ -69,3 +69,10 @@ offset = { x = 0, y = 0 }
 [shell]
 program = "/bin/zsh"
 args= ["-l", "-c", 'tmux attach || tmux -l']
+
+[keyboard]
+bindings = [
+  { key = "D", mods = "Control", chars = "\u0018\u0063" },
+  { key = "'", mods = "Control", chars = "\u0018\u0022" },
+  { key = "%", mods = "Control", chars = "\u0018\u0025" }
+]
