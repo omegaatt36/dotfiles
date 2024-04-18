@@ -42,8 +42,10 @@ export ZPLUG_HOME=~/.zplug
 export TMUX_PLUGIN_MANAGER_PATH=${HOME}/.tmux/plugins/tpm/
 
 # golang
+export GOROOT=/usr/lib/go
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
+export GOPROXY=https://proxy.golang.org,direct
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
 # podman
 if command -v podman &> /dev/null; then source <(podman completion zsh); fi
