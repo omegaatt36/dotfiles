@@ -60,8 +60,19 @@ function install_go() {
   cd "${HOME}" || exit 1
   local go_version="1.22.2"
 
+  # fetch
   wget "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz"
-  rm -rf "${HOME}/go" && tar -xzf go${go_version}.linux-amd64.tar.gz
+
+  # remove old version
+  rm -rf "${HOME}/go"
+  sudo rm /usr/local/go
+
+  # installk new version
+  tar -xzf go${go_version}.linux-amd64.tar.gz
+  sudo cp -r go /usr/local/
+
+  # clearup and exit
+  rm go${go_version}.linux-amd64.tar.gz
   cd - || exit 1
 }
 
