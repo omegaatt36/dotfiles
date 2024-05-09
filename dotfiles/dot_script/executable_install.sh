@@ -2,11 +2,43 @@
 
 _SCRIPTDIR="${HOME}/dotfiles/.script"
 
+install_packages() {
+    if [ -z "$*" ]; then
+        echo "No packages specified."
+        exit 1
+    fi
+
+    local DISTRO_INSTALL
+    if [ -f /etc/os-release ]; then
+        source /etc/os-release
+        if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
+            DISTRO_INSTALL="sudo apt install -y $*"
+        elif [[ "$ID" == "opensuse" || "$ID" == "opensuse-tumbleweed" ]]; then
+            DISTRO_INSTALL="sudo zypper in -y $*"
+        elif [ "$ID" == "macOS" ]; then
+            DISTRO_INSTALL="brew install -y $*"
+        else
+            echo "Unknown distribution. Cannot install packages."
+            exit 1
+        fi
+    else
+        echo "This system does not have /etc/os-release."
+        exit 1
+    fi
+
+    if [ -z "$DISTRO_INSTALL" ]; then
+        echo "No installation command found for this distribution."
+        exit 1
+    fi
+
+    eval "$DISTRO_INSTALL"
+}
+
+
 function install_rust() {
   cd "${HOME}" || exit 1
-  sudo apt install build-essential -y
   curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
-  source "${HOME}"/.cargo/env
+  source "${HOME}/.cargo/env"
   cargo install eza
   cargo install topgrade
   cargo install bottom
@@ -26,7 +58,7 @@ function install_vscode() {
 
 function install_go() {
   cd "${HOME}" || exit 1
-  local go_version="1.20"
+  local go_version="1.22.2"
 
   wget "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz"
   rm -rf "${HOME}/go" && tar -xzf go${go_version}.linux-amd64.tar.gz
@@ -34,13 +66,13 @@ function install_go() {
 }
 
 function install_tmux() {
-  sudo apt install tmux -y
+  install_packages tmux
   git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
   curl https://raw.githubusercontent.com/omegaatt36/lab/main/rc/.tmux.conf -o "${HOME}/.tmux.conf"
 }
 
 function install_zsh() {
-  sudo apt install git curl zsh -y
+  install_packages git curl zsh
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
 
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
