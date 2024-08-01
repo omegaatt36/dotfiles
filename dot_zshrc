@@ -95,7 +95,7 @@ then
   _fzf_compgen_dir() {
     fd --type=d --hidden --exclude .git . "$1"
   }
-  source ~/fzf/fzf-git.sh
+  source ~/.fzf/fzf-git.sh
   alias gb='fzf-git-branch'
   alias gco='fzf-git-checkout'
 fi
