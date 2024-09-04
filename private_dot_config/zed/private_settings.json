@@ -1,0 +1,65 @@
+{
+  "features": {
+    "inline_completion_provider": "supermaven"
+  },
+  "scrollbar": {
+    "show": "never",
+    "cursors": false,
+    "git_diff": true,
+    "search_results": true,
+    "selected_symbol": true,
+    "diagnostics": true
+  },
+  "preview_tabs": {
+    "enabled": true,
+    "enable_preview_from_file_finder": false,
+    "enable_preview_from_code_navigation": false
+  },
+  "assistant": {
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-3-5-sonnet-20240620"
+    },
+    "version": "2"
+  },
+  "show_inline_completions": true,
+  "base_keymap": "VSCode",
+  "auto_update": true,
+  "vim_mode": false,
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "buffer_font_family": "FiraCode Nerd Font",
+  "font_family": "FiraCode Nerd Font",
+  "theme": {
+    "mode": "system",
+    "light": "Gruvbox Light Hard",
+    "dark": "Gruvbox Dark Hard"
+  },
+  "terminal": {
+    "font_size": 14,
+    "font_family": "MesloLGS Nerd Font",
+    "blinking": "off",
+    "working_directory": "current_project_directory"
+  },
+
+  "git": {
+    "git_gutter": "tracked_files"
+  },
+  "autosave": "on_focus_change",
+  "languages": {
+    "Go": {
+      "tab_size": 4,
+      "formatter": {
+        "external": {
+          "command": "goimports",
+          "arguments": []
+        }
+      },
+      "format_on_save": "on",
+      // "inlay_hints": {
+      //   "enabled": true
+      // },
+      "language_servers": ["gopls"]
+    }
+  }
+}

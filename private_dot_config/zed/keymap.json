@@ -1,0 +1,10 @@
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-f12": "editor::GoToImplementation",
+      "ctrl-f11": "editor::GoToImplementationSplit",
+      "shift-f12": "editor::GoToDeclaration"
+    }
+  }
+]
