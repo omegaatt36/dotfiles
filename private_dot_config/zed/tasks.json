@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Test current package",
+    "command": ". config/local.sh && go test $(awk 'NR==1 {print $2}' go.mod)/$(dirname $ZED_RELATIVE_FILE)",
+    "args": [],
+    "env": {},
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": "system",
+    "tags": ["golang-test"]
+  },
+  {
+    "label": "Test current function",
+    "command": ". config/local.sh && go test -run $ZED_SYMBOL $(awk 'NR==1 {print $2}' go.mod)/$(dirname $ZED_RELATIVE_FILE)",
+    "args": [],
+    "env": {},
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": "system",
+    "tags": ["golang-test"]
+  }
+]

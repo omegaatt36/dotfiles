@@ -4,7 +4,18 @@
     "bindings": {
       "ctrl-f12": "editor::GoToImplementation",
       "ctrl-f11": "editor::GoToImplementationSplit",
-      "shift-f12": "editor::GoToDeclaration"
+      "shift-f12": "editor::GoToDeclaration",
+      "ctrl-r": "outline::Toggle"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "ctrl-.": "project_panel::NewFile",
+      "ctrl-,": "project_panel::NewDirectory",
+      "f2": "project_panel::Rename",
+      // "ctrl-shift-c": "project_panel::CopyPath",
+      "enter": "project_panel::Open"
     }
   }
 ]

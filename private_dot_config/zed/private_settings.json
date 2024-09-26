@@ -2,14 +2,6 @@
   "features": {
     "inline_completion_provider": "supermaven"
   },
-  "scrollbar": {
-    "show": "never",
-    "cursors": false,
-    "git_diff": true,
-    "search_results": true,
-    "selected_symbol": true,
-    "diagnostics": true
-  },
   "preview_tabs": {
     "enabled": true,
     "enable_preview_from_file_finder": false,
@@ -22,6 +14,7 @@
     },
     "version": "2"
   },
+  "auto_fold_dirs": true,
   "show_inline_completions": true,
   "base_keymap": "VSCode",
   "auto_update": true,
@@ -39,9 +32,11 @@
     "font_size": 14,
     "font_family": "MesloLGS Nerd Font",
     "blinking": "off",
-    "working_directory": "current_project_directory"
+    "working_directory": "current_project_directory",
+    "env": {
+      "EDITOR": "zed --wait"
+    }
   },
-
   "git": {
     "git_gutter": "tracked_files"
   },
@@ -56,10 +51,36 @@
         }
       },
       "format_on_save": "on",
-      // "inlay_hints": {
-      //   "enabled": true
-      // },
-      "language_servers": ["gopls"]
+      "language_servers": ["gopls", "golangci-lint"]
+    },
+    "HTML": {
+      "preferred_line_length": 240
     }
+  },
+  "lsp": {
+    "golangci-lint": {
+      "initialization_options": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--out-format",
+          "json",
+          "--issues-exit-code=1",
+          "--fix"
+        ]
+      }
+    },
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "format": {
+            "singleQuote": false
+          }
+        }
+      }
+    }
+  },
+  "file_types": {
+    "Dockerfile": ["Dockerfile*"]
   }
 }
