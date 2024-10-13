@@ -1,4 +1,6 @@
 local wezterm = require 'wezterm'
+local mux = wezterm.mux
+
 local config = {}
 config.font = wezterm.font_with_fallback({'MesloLGS Nerd Font', 'Noto Color Emoji', 'Noto Sans CJK TC'})
 config.color_scheme = 'nord'
@@ -23,4 +25,10 @@ end)
 wezterm.on('format-window-title', function(tab, pane, tabes, panes, config)
     return 'WezTerm ' .. wezterm.version
 end)
+
+wezterm.on("gui-startup", function()
+    local tab, pane, window = mux.spawn_window{}
+    window:gui_window():maximize()
+end)
+
 return config
