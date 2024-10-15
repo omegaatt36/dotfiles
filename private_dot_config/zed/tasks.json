@@ -9,7 +9,7 @@
     "reveal": "always",
     "hide": "never",
     "shell": "system",
-    "tags": ["golang-test"]
+    "tags": ["golang-test-package"]
   },
   {
     "label": "Test current function",
@@ -21,6 +21,18 @@
     "reveal": "always",
     "hide": "never",
     "shell": "system",
-    "tags": ["golang-test"]
+    "tags": ["golang-test-function"]
+  },
+  {
+    "label": "Format current file",
+    "command": "gofmt -s -w -l $ZED_RELATIVE_FILE && goimports -w -local $(awk 'NR==1 {print $2}' go.mod) $ZED_RELATIVE_FILE &&gci write -s standard -s default -s \"Prefix($(awk 'NR==1 {print $2}' go.mod))\" --skip-generated $ZED_RELATIVE_FILE",
+    "args": [],
+    "env": {},
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "shell": "system",
+    "tags": ["golang-format"]
   }
 ]

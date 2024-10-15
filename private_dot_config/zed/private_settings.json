@@ -14,27 +14,43 @@
     },
     "version": "2"
   },
+  "show_wrap_guides": true,
+  "wrap_guides": [80, 120],
   "auto_fold_dirs": true,
   "show_inline_completions": true,
   "base_keymap": "VSCode",
   "auto_update": true,
   "vim_mode": false,
-  "ui_font_size": 16,
-  "buffer_font_size": 16,
+  "ui_font_size": 18,
+  "buffer_font_size": 18,
   "buffer_font_family": "FiraCode Nerd Font",
   "font_family": "FiraCode Nerd Font",
   "theme": {
     "mode": "system",
     "light": "Gruvbox Light Hard",
-    "dark": "Gruvbox Dark Hard"
+    "dark": "Nord Omegaatt36"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "project_panel": {
+    // "dock": "right"
+  },
+  "outline_panel": {
+    "dock": "right"
   },
   "terminal": {
-    "font_size": 14,
+    "font_size": 16,
     "font_family": "MesloLGS Nerd Font",
-    "blinking": "off",
+    "cursor_shape": "underline",
+    "blinking": "on",
+    "copy_on_select": true,
     "working_directory": "current_project_directory",
     "env": {
       "EDITOR": "zed --wait"
+    },
+    "toolbar": {
+      "title": false
     }
   },
   "git": {
@@ -44,12 +60,14 @@
   "languages": {
     "Go": {
       "tab_size": 4,
-      "formatter": {
-        "external": {
-          "command": "goimports",
-          "arguments": []
-        }
-      },
+      // "formatter": {
+      //   "external": {
+      //     "command": "gofumpt",
+      //     "arguments": ["-l", "-w"]
+      //     // "command": "goimports",
+      //     // "arguments": []
+      //   }
+      // },
       "format_on_save": "on",
       "language_servers": ["gopls", "golangci-lint"]
     },
@@ -63,6 +81,8 @@
         "command": [
           "golangci-lint",
           "run",
+          "--enable-only",
+          "errcheck,gosimple,govet,ineffassign,staticcheck,unused,revive,copyloopvar",
           "--out-format",
           "json",
           "--issues-exit-code=1",
@@ -78,7 +98,16 @@
           }
         }
       }
-    }
+    },
+    // "typos": {
+    //   "initialization_options": {
+    //     "path": "typos-lsp",
+    //     "diagnosticSeverity": "Error",
+    //     "logLevel": "info",
+    //     "trace.server": "off"
+    //   }
+    // },
+    "markdown-oxide": {}
   },
   "file_types": {
     "Dockerfile": ["Dockerfile*"]
