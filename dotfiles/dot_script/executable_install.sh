@@ -2,6 +2,12 @@
 
 _SCRIPTDIR="${HOME}/dotfiles/.script"
 
+check_sudo() {
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "sudo"
+    fi
+}
+
 install_packages() {
     if [ -z "$*" ]; then
         echo "No packages specified."
@@ -12,9 +18,9 @@ install_packages() {
     if [ -f /etc/os-release ]; then
         source /etc/os-release
         if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
-            DISTRO_INSTALL="sudo apt install -y $*"
+            DISTRO_INSTALL="$(check_sudo) apt install -y $*"
         elif [[ "$ID" == "opensuse" || "$ID" == "opensuse-tumbleweed" ]]; then
-            DISTRO_INSTALL="sudo zypper in -y $*"
+            DISTRO_INSTALL="$(check_sudo) zypper in -y $*"
         elif [ "$ID" == "macOS" ]; then
             DISTRO_INSTALL="brew install -y $*"
         else
@@ -53,23 +59,23 @@ function install_rust() {
 
 function install_vscode() {
   curl 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -o "${HOME}/vscode.deb"
-  sudo apt install "${HOME}/vscode.deb" -y
+  $(check_sudo) apt install "${HOME}/vscode.deb" -y
 }
 
 function install_go() {
   cd "${HOME}" || exit 1
-  local go_version="1.22.5"
+  local go_version="1.23.0"
 
   # fetch
   wget "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz"
 
   # remove old version
-  rm -rf "${HOME}/go"
-  sudo rm -rf /usr/local/go
+  $(check_sudo) rm -rf "${HOME}/go"
+  $(check_sudo) rm -rf /usr/local/go
 
   # installk new version
   tar -xzf go${go_version}.linux-amd64.tar.gz
-  sudo cp -r go /usr/local/
+  $(check_sudo) cp -r go /usr/local/
 
   # clearup and exit
   rm go${go_version}.linux-amd64.tar.gz
