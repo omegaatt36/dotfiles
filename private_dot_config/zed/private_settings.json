@@ -9,10 +9,41 @@
   },
   "assistant": {
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-5-sonnet-20240620"
+      "provider": "openai",
+      "model": "grok-beta"
+    },
+    "provider": {
+      "name": "openai",
+      "grok-beta": {
+        "custom": {
+          "max_tokens": 128000,
+          "name": "grok-beta"
+        }
+      },
+      "available_models": [
+        {
+          "grok-beta": {
+            "name": "grok-beta",
+            "max_tokens": 128000
+          }
+        }
+      ],
+      "api_url": "https://api.x.ai/v1"
     },
     "version": "2"
+  },
+  "language_models": {
+    "openai": {
+      "version": "1",
+      "api_url": "https://api.x.ai/v1",
+      "available_models": [
+        {
+          "provider": "x.ai",
+          "name": "grok-beta",
+          "max_tokens": 128000
+        }
+      ]
+    }
   },
   "show_wrap_guides": true,
   "wrap_guides": [80, 120],
@@ -46,9 +77,9 @@
     "blinking": "on",
     "copy_on_select": true,
     "working_directory": "current_project_directory",
-    "env": {
-      "EDITOR": "zed --wait"
-    },
+    // "env": {
+    //   "EDITOR": "zed --wait"
+    // },
     "toolbar": {
       "title": false
     }
@@ -60,14 +91,6 @@
   "languages": {
     "Go": {
       "tab_size": 4,
-      // "formatter": {
-      //   "external": {
-      //     "command": "gofumpt",
-      //     "arguments": ["-l", "-w"]
-      //     // "command": "goimports",
-      //     // "arguments": []
-      //   }
-      // },
       "format_on_save": "on",
       "language_servers": ["gopls", "golangci-lint"]
     },
@@ -98,16 +121,7 @@
           }
         }
       }
-    },
-    // "typos": {
-    //   "initialization_options": {
-    //     "path": "typos-lsp",
-    //     "diagnosticSeverity": "Error",
-    //     "logLevel": "info",
-    //     "trace.server": "off"
-    //   }
-    // },
-    "markdown-oxide": {}
+    }
   },
   "file_types": {
     "Dockerfile": ["Dockerfile*"]
