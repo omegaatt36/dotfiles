@@ -3,6 +3,17 @@ padding = { x = 18, y = 2 }
 startup_mode = "Maximized"
 opacity = 0.85
 
+[mouse]
+
+# When true, the cursor is temporarily hidden when typing
+hide_when_typing = true  # Default: false
+
+#bindings = [
+#{ mouse = "Left", mods = "Control", action = "Copy" },
+#{ mouse = "Right", mods= "Control", action = "Paste" },
+#]
+
+
 [font]
 normal = { family = "MesloLGS Nerd Font", style = "Regular" }
 bold = { family = "MesloLGS Nerd Font", style = "Bold" }

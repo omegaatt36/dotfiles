@@ -14,10 +14,8 @@ fi
 
 INSTALL_PACKAGE=""
 if [[ $PACKAGE == *"@"* ]]; then
-    # 包含版本信息，直接安裝
     INSTALL_PACKAGE="$PACKAGE"
 else
-    # 不包含版本信息，使用 @latest
     INSTALL_PACKAGE="${PACKAGE}@latest"
 fi
 
