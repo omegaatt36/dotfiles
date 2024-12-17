@@ -13,7 +13,7 @@
   },
   {
     "label": "Test current function",
-    "command": ". config/local.sh && go test -run $ZED_SYMBOL $(awk 'NR==1 {print $2}' go.mod)/$(dirname $ZED_RELATIVE_FILE)",
+    "command": ". config/local.sh && go test -run '^$ZED_SYMBOL$' $(awk 'NR==1 {print $2}' go.mod)/$(dirname $ZED_RELATIVE_FILE)",
     "args": [],
     "env": {},
     "use_new_terminal": false,

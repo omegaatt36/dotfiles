@@ -9,26 +9,8 @@
   },
   "assistant": {
     "default_model": {
-      "provider": "openai",
-      "model": "grok-beta"
-    },
-    "provider": {
-      "name": "openai",
-      "grok-beta": {
-        "custom": {
-          "max_tokens": 128000,
-          "name": "grok-beta"
-        }
-      },
-      "available_models": [
-        {
-          "grok-beta": {
-            "name": "grok-beta",
-            "max_tokens": 128000
-          }
-        }
-      ],
-      "api_url": "https://api.x.ai/v1"
+      "provider": "google",
+      "model": "gemini-2.0-flash-exp"
     },
     "version": "2"
   },
@@ -40,7 +22,17 @@
         {
           "provider": "x.ai",
           "name": "grok-beta",
+          "display_name": "Grok (Beta)",
           "max_tokens": 128000
+        }
+      ]
+    },
+    "google": {
+      "available_models": [
+        {
+          "name": "gemini-2.0-flash-exp",
+          "display_name": "Gemini 2.0 Flash (Experimental)",
+          "max_tokens": 1048576
         }
       ]
     }
@@ -55,7 +47,7 @@
   "ui_font_size": 18,
   "buffer_font_size": 18,
   "buffer_font_family": "FiraCode Nerd Font",
-  "font_family": "FiraCode Nerd Font",
+  "font_family": ["FiraCode Nerd Font", "Iansui"],
   "theme": {
     "mode": "system",
     "light": "Gruvbox Light Hard",
@@ -80,8 +72,10 @@
     // "env": {
     //   "EDITOR": "zed --wait"
     // },
+    // "line_height": "comfortable",
     "toolbar": {
-      "title": false
+      "title": false,
+      "breadcrumbs": false
     }
   },
   "git": {
@@ -94,25 +88,42 @@
       "format_on_save": "on",
       "language_servers": ["gopls", "golangci-lint"]
     },
+    "Python": {
+      "language_servers": ["ruff"],
+      "format_on_save": "on",
+      "formatter": [
+        {
+          "code_actions": {
+            "source.organizeImports.ruff": true,
+            "source.fixAll.ruff": true
+          }
+        },
+        {
+          "language_server": {
+            "name": "ruff"
+          }
+        }
+      ]
+    },
     "HTML": {
       "preferred_line_length": 240
     }
   },
   "lsp": {
-    "golangci-lint": {
-      "initialization_options": {
-        "command": [
-          "golangci-lint",
-          "run",
-          "--enable-only",
-          "errcheck,gosimple,govet,ineffassign,staticcheck,unused,revive,copyloopvar",
-          "--out-format",
-          "json",
-          "--issues-exit-code=1",
-          "--fix"
-        ]
-      }
-    },
+    // "golangci-lint": {
+    //   "initialization_options": {
+    //     "command": [
+    //       "golangci-lint",
+    //       "run",
+    //       "--enable-only",
+    //       "errcheck,gosimple,govet,ineffassign,staticcheck,unused,revive,copyloopvar",
+    //       "--out-format",
+    //       "json",
+    //       "--issues-exit-code=1",
+    //       "--fix"
+    //     ]
+    //   }
+    // },
     "yaml-language-server": {
       "settings": {
         "yaml": {

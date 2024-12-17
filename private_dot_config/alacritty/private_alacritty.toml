@@ -1,7 +1,7 @@
 [window]
 padding = { x = 18, y = 2 }
 startup_mode = "Maximized"
-opacity = 0.85
+opacity = 0.95
 
 [mouse]
 
