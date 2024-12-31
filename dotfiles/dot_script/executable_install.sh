@@ -45,12 +45,13 @@ function install_rust() {
   cd "${HOME}" || exit 1
   curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
   source "${HOME}/.cargo/env"
-  cargo install eza
-  cargo install topgrade
-  cargo install bottom
-  cargo install bat
-  cargo install zoxide
-
+  install_packages eza eza-zsh-completion \
+  zoxide \
+  topgrade \
+  bottom \
+  bat bat-zsh-completion \
+  git-delta \
+  fd fd-zsh-completion
   mkdir -p .config/bottom
   cp "${_SCRIPTDIR}"/.config/bottom/bottom.toml .config/bottom
   cp "${_SCRIPTDIR}"/.config/topgrade.toml .config/
@@ -97,7 +98,7 @@ function install_zsh() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
   git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/wakatime
   git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin
-
+  git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/fzf-tab
   ./bin/chezmoi update --force
   zsh -c 'source "${HOME}/.zshrc"; exec zsh'
 }
