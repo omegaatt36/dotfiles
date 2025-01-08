@@ -1,12 +1,13 @@
 [window]
-padding = { x = 18, y = 2 }
+padding = { x = 18, y = 10 }
 startup_mode = "Maximized"
-opacity = 0.95
+opacity = 0.8
+blur = true
+decorations = "none"
 
 [mouse]
 
-# When true, the cursor is temporarily hidden when typing
-hide_when_typing = true  # Default: false
+hide_when_typing = true
 
 #bindings = [
 #{ mouse = "Left", mods = "Control", action = "Copy" },
@@ -19,7 +20,7 @@ normal = { family = "MesloLGS Nerd Font", style = "Regular" }
 bold = { family = "MesloLGS Nerd Font", style = "Bold" }
 italic = { family = "MesloLGS Nerd Font", style = "Italic" }
 bold_italic = { family = "MesloLGS Nerd Font", style = "Bold Italic" }
-size = 14
+size = 16
 offset = { x = 0, y = 0 }
 
 [colors]
@@ -85,7 +86,9 @@ args = ["-l", "-c", 'tmux attach || tmux -l']
 bindings = [
   { key = "D", mods = "Control", chars = "\u0018\u0063" },
   { key = "'", mods = "Control", chars = "\u0018\u0022" },
-  { key = "%", mods = "Control", chars = "\u0018\u0025" }
+  { key = "%", mods = "Control", chars = "\u0018\u0025" },
+  { key = "Right", mods = "Alt", chars = "\u001BF" },
+  { key = "Left", mods = "Alt", chars = "\u001BB" }
 ]
 
 [terminal]
