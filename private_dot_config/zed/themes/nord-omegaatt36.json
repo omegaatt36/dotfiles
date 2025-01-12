@@ -15,7 +15,7 @@
         "border.disabled": "#3b4252",
         "elevated_surface.background": "#3b4252",
         "surface.background": "#3b4252",
-        "background": "#2e344000",
+        "background": "#2e3440aa",
         // "background": "#2e3440ef",
         "background.appearance": "blurred",
         // "background.appearance": "transparent",
