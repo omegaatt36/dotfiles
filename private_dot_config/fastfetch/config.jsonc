@@ -68,7 +68,12 @@
     },
     {
       "type": "shell",
-      "key": "└ └",
+      "key": "│ ├",
+      "keyColor": "yellow",
+    },
+    {
+      "type": "terminal",
+      "key": "└ └",
       "keyColor": "yellow",
     },
     {
