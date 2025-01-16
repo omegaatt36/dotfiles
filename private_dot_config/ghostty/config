@@ -22,7 +22,7 @@ window-padding-balance = true
 
 ## shell
 shell-integration = zsh
-#command=zsh -l -c tmux attach || tmux -l
+command=~/dotfiles/.script/ghostty-tmux.sh
 
 ## cursor
 cursor-style = "bar"

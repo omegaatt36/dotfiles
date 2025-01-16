@@ -5,7 +5,12 @@
       "ctrl-f12": "editor::GoToImplementation",
       "ctrl-f11": "editor::GoToImplementationSplit",
       "shift-f12": "editor::GoToDeclaration",
-      "ctrl-r": "outline::Toggle"
+      "ctrl-r": "outline::Toggle",
+      "ctrl-pageup": "pane::ActivatePrevItem",
+      "ctrl-pagedown": "pane::ActivateNextItem",
+      "cmd-pageup": "pane::ActivatePrevItem",
+      "cmd-pagedown": "pane::ActivateNextItem",
+      "cmd-y": "editor::Redo"
     }
   },
   {

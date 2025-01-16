@@ -82,7 +82,7 @@ export LC_TIME=en_US.UTF-8'
 
 en_locale
 
-# ========== other env ==========
+# ========== fzf ==========
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
@@ -173,3 +173,8 @@ fi
 
 alias pbcopy='xclip -selection clipboard -r'
 alias pbpaste='xclip -selection clipboard -o'
+
+
+# ========== other env ==========
+[[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
+

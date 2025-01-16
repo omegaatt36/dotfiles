@@ -12,27 +12,29 @@
       "provider": "google",
       "model": "gemini-2.0-flash-exp"
     },
-    "version": "2"
+    "version": "2",
+    "enable_experimental_live_diffs": true
   },
   "language_models": {
-    "openai": {
-      "version": "1",
-      "api_url": "https://api.x.ai/v1",
-      "available_models": [
-        {
-          "provider": "x.ai",
-          "name": "grok-beta",
-          "display_name": "Grok (Beta)",
-          "max_tokens": 128000
-        }
-      ]
-    },
+    // this is an example of how to add a model
+    // "openai": {
+    //   "version": "1",
+    //   "api_url": "https://api.x.ai/v1",
+    //   "available_models": [
+    //     {
+    //       "provider": "x.ai",
+    //       "name": "grok-beta",
+    //       "display_name": "Grok (Beta)",
+    //       "max_tokens": 128000
+    //     }
+    //   ]
+    // },
     "google": {
       "available_models": [
         {
-          "name": "gemini-2.0-flash-exp",
-          "display_name": "Gemini 2.0 Flash (Experimental)",
-          "max_tokens": 1048576
+          "name": "gemini-2.0-flash-thinking-exp-1219",
+          "display_name": "Gemini 2.0 Thinking (Experimental)",
+          "max_tokens": 32786
         }
       ]
     }
@@ -51,7 +53,7 @@
   "theme": {
     "mode": "system",
     "light": "Gruvbox Light Hard",
-    "dark": "Nord Omegaatt36"
+    "dark": "Nord Omegaatt36 Blur"
   },
   "collaboration_panel": {
     "dock": "right"
@@ -65,14 +67,14 @@
   "terminal": {
     "font_size": 16,
     "font_family": "MesloLGS Nerd Font",
-    "cursor_shape": "underline",
+    "cursor_shape": "bar",
     "blinking": "on",
     "copy_on_select": true,
     "working_directory": "current_project_directory",
     // "env": {
     //   "EDITOR": "zed --wait"
     // },
-    // "line_height": "comfortable",
+    "line_height": "comfortable",
     "toolbar": {
       "title": false,
       "breadcrumbs": false
@@ -89,12 +91,12 @@
       "language_servers": ["gopls", "golangci-lint"]
     },
     "Python": {
-      "language_servers": ["ruff"],
+      "language_servers": ["pyright", "ruff"],
       "format_on_save": "on",
       "formatter": [
         {
           "code_actions": {
-            "source.organizeImports.ruff": true,
+            "source.organizeImports.ruff": false,
             "source.fixAll.ruff": true
           }
         },
@@ -103,33 +105,70 @@
             "name": "ruff"
           }
         }
-      ]
+      ],
+      "show_inline_completions": false
     },
     "HTML": {
       "preferred_line_length": 240
+    },
+    "Markdown": {
+      // turn off auto-complete AI assistance *in* the assistant panel
+      // https://github.com/zed-industries/zed/discussions/13328
+      "show_inline_completions": false
     }
   },
   "lsp": {
-    // "golangci-lint": {
-    //   "initialization_options": {
-    //     "command": [
-    //       "golangci-lint",
-    //       "run",
-    //       "--enable-only",
-    //       "errcheck,gosimple,govet,ineffassign,staticcheck,unused,revive,copyloopvar",
-    //       "--out-format",
-    //       "json",
-    //       "--issues-exit-code=1",
-    //       "--fix"
-    //     ]
-    //   }
-    // },
+    "golangci-lint": {
+      "initialization_options": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--disable-all",
+          "--enable",
+          "gosec",
+          "gofmt",
+          "--out-format",
+          "json",
+          "--issues-exit-code=1"
+        ]
+      }
+    },
     "yaml-language-server": {
       "settings": {
         "yaml": {
           "format": {
             "singleQuote": false
           }
+        }
+      }
+    },
+    "ruff": {
+      "initialization_options": {
+        // https://docs.astral.sh/ruff/settings/
+        "settings": {
+          // "lineLength": 120,
+          "lint": {
+            // https://docs.astral.sh/ruff/rules/
+            "extendSelect": ["F", "E", "W", "N"],
+            "ignore": ["E501"]
+          },
+          "format": {
+            "quoteStyle": "preserve"
+          }
+        }
+      }
+    },
+    "pyright": {
+      "settings": {
+        "python.analysis": {
+          // "diagnosticMode": "workspace",
+          // "reportMissingTypeStubs": false,
+          // "typeCheckingMode": "basic"
+          "ignore": ["*"] // temporarily disable ALL of type checking
+        },
+        "python": {
+          // $ uv venv --seed --python $(which python3) --directory="${HOME}/.local" venv
+          "pythonPath": "~/.local/venv/bin/python"
         }
       }
     }
