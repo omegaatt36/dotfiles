@@ -171,10 +171,11 @@ then
 fi
 
 
-alias pbcopy='xclip -selection clipboard -r'
-alias pbpaste='xclip -selection clipboard -o'
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    alias pbcopy='xclip -selection clipboard -r'
+    alias pbpaste='xclip -selection clipboard -o'
+fi
 
 
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
-
