@@ -15,14 +15,14 @@ install_packages() {
     fi
 
     local DISTRO_INSTALL
-    if [ -f /etc/os-release ]; then
+    if [ "$(uname -s)" == "Darwin" ]; then
+        DISTRO_INSTALL="brew install $*"
+    elif [ -f /etc/os-release ]; then
         source /etc/os-release
         if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
             DISTRO_INSTALL="$(check_sudo) apt install -y $*"
         elif [[ "$ID" == "opensuse" || "$ID" == "opensuse-tumbleweed" ]]; then
             DISTRO_INSTALL="$(check_sudo) zypper in -y $*"
-        elif [ "$ID" == "macOS" ]; then
-            DISTRO_INSTALL="brew install -y $*"
         else
             echo "Unknown distribution. Cannot install packages."
             exit 1
@@ -40,67 +40,98 @@ install_packages() {
     eval "$DISTRO_INSTALL"
 }
 
-
-function install_rust() {
-  cd "${HOME}" || exit 1
-  curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
-  source "${HOME}/.cargo/env"
-  install_packages eza eza-zsh-completion \
-  zoxide \
-  topgrade \
-  bottom \
-  bat bat-zsh-completion \
-  git-delta \
-  fd fd-zsh-completion
-  mkdir -p .config/bottom
-  cp "${_SCRIPTDIR}"/.config/bottom/bottom.toml .config/bottom
-  cp "${_SCRIPTDIR}"/.config/topgrade.toml .config/
-  cd - || exit 1
+function install_homebrew() {
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-function install_vscode() {
-  curl 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -o "${HOME}/vscode.deb"
-  $(check_sudo) apt install "${HOME}/vscode.deb" -y
+function install_rust() {
+    cd "${HOME}" || exit 1
+    curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+    source "${HOME}/.cargo/env"
+    install_packages eza eza-zsh-completion \
+    zoxide \
+    topgrade \
+    bottom \
+    bat bat-zsh-completion \
+    git-delta \
+    fd fd-zsh-completio
+    mkdir -p .config/bottom
+    mkdir -p .config/zellij
+    cp "${_SCRIPTDIR}"/.config/bottom/bottom.toml .config/bottom
+    cp "${_SCRIPTDIR}"/.config/topgrade.toml .config/
+    cd - || exit 1
 }
 
 function install_go() {
-  cd "${HOME}" || exit 1
-  local go_version="1.23.0"
+    cd "${HOME}" || exit 1
+    local go_version="1.23.6"
+    local os_type=$(uname -s)
+    local arch_type=$(uname -m)
+    local go_os_arch
+    local download_url
 
-  # fetch
-  wget "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz"
+    case "${os_type}-${arch_type}" in
+        Darwin-arm64)
+            go_os_arch="darwin-arm64"
+            ;;
+        Linux-x86_64)
+            go_os_arch="linux-amd64"
+            ;;
+        Darwin-x86_64)
+            go_os_arch="darwin-amd64"
+            ;;
+        *)
+            echo "Unsupported OS/architecture: ${os_type}-${arch_type}"
+            exit 1
+            ;;
+    esac
 
-  # remove old version
-  $(check_sudo) rm -rf "${HOME}/go"
-  $(check_sudo) rm -rf /usr/local/go
+    download_url="https://go.dev/dl/go${go_version}.${go_os_arch}.tar.gz"
 
-  # installk new version
-  tar -xzf go${go_version}.linux-amd64.tar.gz
-  $(check_sudo) cp -r go /usr/local/
+    # fetch
+    wget "${download_url}"
 
-  # clearup and exit
-  rm go${go_version}.linux-amd64.tar.gz
-  cd - || exit 1
+    # remove old version
+    $(check_sudo) rm -rf "${HOME}/go"
+    $(check_sudo) rm -rf /usr/local/go
+
+    # installk new version
+    tar -xzf "go${go_version}.${go_os_arch}.tar.gz"
+    $(check_sudo) cp -r go /usr/local/
+
+    # clearup and exit
+    rm "go${go_version}.${go_os_arch}.tar.gz"
+    cd - || exit 1
 }
 
 function install_tmux() {
-  install_packages tmux
-  git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
-  curl https://raw.githubusercontent.com/omegaatt36/lab/main/rc/.tmux.conf -o "${HOME}/.tmux.conf"
+    install_packages tmux
+    git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+    curl https://raw.githubusercontent.com/omegaatt36/lab/main/rc/.tmux.conf -o "${HOME}/.tmux.conf"
+}
+
+function install_zellij() {
+    install_packages zellij
+    cp "${_SCRIPTDIR}"/.config/zellij/config.kdl ${HOME}/.config/zellij/
 }
 
 function install_zsh() {
-  install_packages git curl zsh
-  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
+    local os_type=$(uname -s)
+    if [ "${os_type}" != "Darwin" ]; then
+        install_packages zsh
+    fi
 
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
-  git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
-  git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/wakatime
-  git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin
-  git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/fzf-tab
-  ./bin/chezmoi update --force
-  zsh -c 'source "${HOME}/.zshrc"; exec zsh'
+    install_packages git curl
+    RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
+
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+    git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
+    git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/wakatime
+    git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin
+    git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/fzf-tab
+    ./bin/chezmoi update --force
+    zsh -c 'source "${HOME}/.zshrc"; exec zsh'
 }
 
 function install_vimplugin() {
