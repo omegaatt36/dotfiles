@@ -28,7 +28,12 @@ import = ["~/.config/alacritty/themes/themes/nord.toml"]
 
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", 'tmux attach || tmux -l']
+#args = ["-l", "-c", 'tmux attach || tmux -l']
+args = [
+  "-l", 
+  "-c", 
+  'zellij attach --index 0 || zellij'
+]
 
 [keyboard]
 bindings = [
