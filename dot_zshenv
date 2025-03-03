@@ -2,3 +2,6 @@
 
 # uv
 export PATH="${HOME}/.local/bin:$PATH"
+
+# wakatime-cli
+export ZSH_WAKATIME_BIN=/usr/local/bin/wakatime-cli
