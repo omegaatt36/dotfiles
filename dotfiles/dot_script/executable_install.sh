@@ -64,7 +64,7 @@ function install_rust() {
 
 function install_go() {
     cd "${HOME}" || exit 1
-    local go_version="1.23.6"
+    local go_version="1.24.0"
     local os_type=$(uname -s)
     local arch_type=$(uname -m)
     local go_os_arch
