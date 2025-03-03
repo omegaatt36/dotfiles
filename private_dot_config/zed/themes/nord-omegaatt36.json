@@ -7,7 +7,7 @@
       "name": "Nord Omegaatt36 Blur",
       "appearance": "dark",
       "style": {
-        "border": "#3b4252ff",
+        "border": "#4e5463ff",
         "border.variant": "#4b5262ff",
         "border.focused": "#3b4252ff",
         "border.selected": "#3b4252ff",
@@ -59,7 +59,7 @@
         "scrollbar.track.background": "#00000000",
         "scrollbar.track.border": "#00000000",
         "editor.foreground": "#d8dee9ff",
-        "editor.background": "#3b4252ef",
+        "editor.background": "#292e39ef",
         "editor.gutter.background": "#2e3440ef",
         "editor.subheader.background": "#121212dd",
         "editor.active_line.background": "#3b4252aa",

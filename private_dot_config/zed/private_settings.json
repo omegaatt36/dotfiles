@@ -1,7 +1,7 @@
 {
   "icon_theme": "Material Icon Theme",
   "features": {
-    "inline_completion_provider": "supermaven"
+    "edit_prediction_provider": "zed"
   },
   "preview_tabs": {
     "enabled": true,
@@ -11,7 +11,7 @@
   "assistant": {
     "default_model": {
       "provider": "google",
-      "model": "gemini-exp-1206"
+      "model": "gemini-2.0-pro-exp-02-05"
     },
     "version": "2",
     "enable_experimental_live_diffs": true
@@ -30,16 +30,22 @@
     //     }
     //   ]
     // },
+    // https://ai.google.dev/gemini-api/docs/models/experimental-models
     "google": {
       "available_models": [
+        {
+          "name": "gemini-2.0-flash-exp",
+          "display_name": "Gemini 2.0 Flash (Experimental)",
+          "max_tokens": 1048576
+        },
         {
           "name": "gemini-2.0-flash-thinking-exp-01-21",
           "display_name": "Gemini 2.0 Thinking (Experimental)",
           "max_tokens": 1048576
         },
         {
-          "name": "gemini-exp-1206",
-          "display_name": "Gemini 2.0 Advanced",
+          "name": "gemini-2.0-pro-exp-02-05",
+          "display_name": "Gemini 2.0 Pro (Experimental)",
           "max_tokens": 2097152
         }
       ]
@@ -48,7 +54,7 @@
   "show_wrap_guides": true,
   "wrap_guides": [80, 120],
   "auto_fold_dirs": true,
-  "show_inline_completions": true,
+  "show_edit_predictions": true,
   "base_keymap": "VSCode",
   "auto_update": true,
   "vim_mode": false,
@@ -113,7 +119,7 @@
           }
         }
       ],
-      "show_inline_completions": false
+      "show_edit_predictions": false
     },
     "HTML": {
       "preferred_line_length": 240
@@ -121,7 +127,7 @@
     "Markdown": {
       // turn off auto-complete AI assistance *in* the assistant panel
       // https://github.com/zed-industries/zed/discussions/13328
-      "show_inline_completions": false
+      "show_edit_predictions": false
     },
     "YAML": {
       "tab_size": 2
