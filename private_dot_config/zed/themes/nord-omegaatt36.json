@@ -163,7 +163,8 @@
             "font_weight": null
           },
           "boolean": {
-            "color": "#81A1C1ff",
+            "color": "#c0ffeeff",
+            // "color": "#81A1C1ff",
             "font_style": null,
             "font_weight": null
           },
@@ -208,6 +209,11 @@
             "font_weight": null
           },
           "function": {
+            "color": "#88c0d0ff",
+            "font_style": null,
+            "font_weight": null
+          },
+          "function.method": {
             "color": "#88c0d0ff",
             "font_style": null,
             "font_weight": null
@@ -268,7 +274,7 @@
             "font_weight": null
           },
           "punctuation": {
-            "color": "#ECEFF4ff",
+            "color": "#eceff4ff",
             "font_style": null,
             "font_weight": null
           },
@@ -278,7 +284,7 @@
             "font_weight": null
           },
           "punctuation.delimiter": {
-            "color": "#81A1C1ff",
+            "color": "#e5e9f0ff",
             "font_style": null,
             "font_weight": null
           },
@@ -349,6 +355,16 @@
           },
           "variant": {
             "color": "#89b482ff",
+            "font_style": null,
+            "font_weight": null
+          },
+          "namespace": {
+            "color": "#ebcb8b",
+            "font_style": null,
+            "font_weight": null
+          },
+          "heading": {
+            "color": "#ff0000",
             "font_style": null,
             "font_weight": null
           }
