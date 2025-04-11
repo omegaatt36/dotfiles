@@ -1,7 +1,16 @@
 {
+  "edit_predictions": {
+    "mode": "eager",
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null
+    },
+    "enabled_in_assistant": false
+  },
   "icon_theme": "Material Icon Theme",
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "zed",
+    "context": true
   },
   "preview_tabs": {
     "enabled": true,
@@ -9,9 +18,10 @@
     "enable_preview_from_code_navigation": false
   },
   "assistant": {
+    "default_profile": "ask",
     "default_model": {
-      "provider": "google",
-      "model": "gemini-2.0-pro-exp-02-05"
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-latest"
     },
     "version": "2",
     "enable_experimental_live_diffs": true
@@ -37,16 +47,6 @@
           "name": "gemini-2.0-flash-exp",
           "display_name": "Gemini 2.0 Flash (Experimental)",
           "max_tokens": 1048576
-        },
-        {
-          "name": "gemini-2.0-flash-thinking-exp-01-21",
-          "display_name": "Gemini 2.0 Thinking (Experimental)",
-          "max_tokens": 1048576
-        },
-        {
-          "name": "gemini-2.0-pro-exp-02-05",
-          "display_name": "Gemini 2.0 Pro (Experimental)",
-          "max_tokens": 2097152
         }
       ]
     }
@@ -60,7 +60,7 @@
   "vim_mode": false,
   "ui_font_size": 18,
   "buffer_font_size": 18.0,
-  "buffer_font_family": "FiraCode Nerd Font",
+  // "buffer_font_family": "FiraCode Nerd Font",
   "font_family": ["FiraCode Nerd Font", "Iansui"],
   "theme": {
     "mode": "system",
@@ -130,7 +130,11 @@
       "show_edit_predictions": false
     },
     "YAML": {
+      "language_servers": ["yaml-language-server", "helm-ls"],
       "tab_size": 2
+    },
+    "Groovy": {
+      "language_servers": []
     }
   },
   "lsp": {
@@ -149,6 +153,7 @@
           "unused",
           "revive",
           "copyloopvar",
+          "EXC0001",
           "--out-format",
           "json",
           "--issues-exit-code=1"
@@ -159,7 +164,9 @@
       "settings": {
         "yaml": {
           "format": {
-            "singleQuote": false
+            "enable": true,
+            "singleQuote": true,
+            "bracketSpacing": false
           }
         }
       }
@@ -196,6 +203,42 @@
     }
   },
   "file_types": {
-    "Dockerfile": ["Dockerfile*"]
+    "Dockerfile": ["Dockerfile*"],
+    "Helm": [
+      "**/templates/**/*.tpl",
+      "**/templates/**/*.yaml",
+      "**/templates/**/*.yml",
+      "**/helmfile.d/**/*.yaml",
+      "**/helmfile.d/**/*.yml"
+    ]
+  },
+  "context_servers": {
+    // "calculator-go": {
+    //   "command": {
+    //     "path": "mcp-calculator-go",
+    //     "args": [],
+    //     "env": {}
+    //   },
+    //   "settings": {}
+    // }
+    // "github": {
+    //   "command": {
+    //     "path": "docker",
+    //     "args": [
+    //       "run",
+    //       "-i",
+    //       "--rm",
+    //       "--name",
+    //       "github-mcp-server-zed",
+    //       "-e",
+    //       "GITHUB_PERSONAL_ACCESS_TOKEN",
+    //       "ghcr.io/github/github-mcp-server"
+    //     ],
+    //     "env": {
+    //       "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+    //     }
+    //   },
+    //   "settings": {}
+    // }
   }
 }
