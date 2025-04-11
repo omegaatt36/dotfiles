@@ -48,6 +48,10 @@ if command -v terraform &> /dev/null; then
   complete -o nospace -C $(which terraform) terraform
 fi
 
+# ========== colima ==========
+if command -v colima &> /dev/null; then
+  source <(colima completion zsh)
+fi
 
 # ========== argocd ==========
 if command -v argocd &> /dev/null; then
@@ -181,3 +185,4 @@ fi
 
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
+
