@@ -41,7 +41,6 @@ if command -v podman &> /dev/null; then
   source <(podman completion zsh)
 fi
 
-
 # ========== terraform ==========
 if command -v terraform &> /dev/null; then
   autoload -U +X bashcompinit && bashcompinit
@@ -51,6 +50,17 @@ fi
 # ========== colima ==========
 if command -v colima &> /dev/null; then
   source <(colima completion zsh)
+fi
+
+# ========== nerdctl ==========
+if command -v nerdctl &> /dev/null; then
+  source <(nerdctl completion zsh)
+  alias nerd=nerdctl
+fi
+
+# ========== taskfile =========
+if command -v task &> /dev/null; then
+  source <(task --completion zsh)
 fi
 
 # ========== argocd ==========
@@ -124,51 +134,50 @@ fi
 # fzf
 if command -v fzf &> /dev/null;
 then
-    # eval "$(fzf --zsh)"
-    export FZF_DEFAULT_OPTS="--layout=reverse \
-    --info=inline \
-    --height=80% \
-    --multi \
-    --prompt='∼ ' \
-    --pointer='▶' \
-    --marker='✓' \
-    --bind '?:toggle-preview' \
-    --bind 'ctrl-a:select-all' \
-    --bind 'ctrl-e:execute(vim {+} >/dev/tty)' \
-    --bind 'ctrl-v:execute(code {+})'"
+    eval "$(fzf --zsh)"
+    # export FZF_DEFAULT_OPTS="--layout=reverse \
+    # --info=inline \
+    # --height=80% \
+    # --multi \
+    # --prompt='∼ ' \
+    # --pointer='▶' \
+    # --marker='✓' \
+    # --bind '?:toggle-preview' \
+    # --bind 'ctrl-a:select-all' \
+    # --bind 'ctrl-e:execute(vim {+} >/dev/tty)' \
+    # --bind 'ctrl-v:execute(code {+})'"
 
-    show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
+    # show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
-    # export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
-    export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-    export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+    # # export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+    # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    # export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
+    # export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+    # export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-    _fzf_compgen_path() {
-      fd --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
-    }
+    # _fzf_compgen_path() {
+    #   fd --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
+    # }
 
-    _fzf_compgen_dir() {
-      fd --type d --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
-    }
+    # _fzf_compgen_dir() {
+    #   fd --type d --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
+    # }
 
 
-    _fzf_comprun() {
-      local command=$1
-      shift
+    # _fzf_comprun() {
+    #   local command=$1
+    #   shift
 
-      case "$command" in
-        cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
-        export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
-        ssh)          fzf --preview 'dig {}'                   "$@" ;;
-        *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
-      esac
-    }
+    #   case "$command" in
+    #     cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+    #     export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
+    #     ssh)          fzf --preview 'dig {}'                   "$@" ;;
+    #     *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
+    #   esac
+    # }
 
-    zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+    # zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 fi
-
 
 if command -v zoxide &> /dev/null;
 then
@@ -185,4 +194,3 @@ fi
 
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
-
