@@ -20,8 +20,8 @@
   "assistant": {
     "default_profile": "ask",
     "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-5-sonnet-latest"
+      "provider": "google",
+      "model": "gemini-2.5-pro-exp-03-25"
     },
     "version": "2",
     "enable_experimental_live_diffs": true
@@ -44,8 +44,8 @@
     "google": {
       "available_models": [
         {
-          "name": "gemini-2.0-flash-exp",
-          "display_name": "Gemini 2.0 Flash (Experimental)",
+          "name": "gemini-2.5-flash-preview-04-17",
+          "display_name": "Gemini 2.5 Flash (Preview)",
           "max_tokens": 1048576
         }
       ]
@@ -143,20 +143,8 @@
         "command": [
           "golangci-lint",
           "run",
-          "--disable-all",
-          "--enable",
-          "errcheck",
-          "gosimple",
-          "govet",
-          "ineffassign",
-          "staticcheck",
-          "unused",
-          "revive",
-          "copyloopvar",
-          "EXC0001",
-          "--out-format",
-          "json",
-          "--issues-exit-code=1"
+          "--config",
+          "~/.config/golangci/config.yaml"
         ]
       }
     },
@@ -197,7 +185,10 @@
         },
         "python": {
           // $ uv venv --seed --python $(which python3) --directory="${HOME}/.local" venv
-          "pythonPath": "~/.local/venv/bin/python"
+          "pythonPath": "~/.venv/bin/python"
+        },
+        "format": {
+          "quoteStyle": "preserve"
         }
       }
     }
