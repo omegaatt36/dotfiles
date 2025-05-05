@@ -1,7 +1,7 @@
 [window]
 padding = { x = 18, y = 10 }
 startup_mode = "Maximized"
-opacity = 0.8
+opacity = 0.7
 blur = true
 decorations = "none"
 

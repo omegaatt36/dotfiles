@@ -49,7 +49,10 @@ fi
 
 # ========== colima ==========
 if command -v colima &> /dev/null; then
-  source <(colima completion zsh)
+  # Check if colima profile 'k8s' is running without printing messages
+  if colima status --profile k8s &> /dev/null; then
+    source <(colima completion zsh)
+  fi
 fi
 
 # ========== nerdctl ==========
