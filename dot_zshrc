@@ -21,66 +21,73 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 
-# ========== docker ==========
-if command -v docker &> /dev/null; then
-  alias dk=docker
-  alias dkc="docker compose"
-  source <(docker completion zsh)
-fi
+# Function to lazy load completions
+# Usage: lazy_load_completion_command "command_name" "alias_name_if_any" "completion_sourcing_command" "completion_function_name"
+# Example: lazy_load_completion_command "kubectl" "k" "kubectl completion zsh" "_kubectl"
+lazy_load_completion_command() {
+  local cmd_name="$1"
+  local alias_name="$2" # Can be empty if no alias or same as cmd_name
+  local comp_src_cmd="$3"
+  local comp_func_name="$4" # The function Zsh will call for completion, e.g., _kubectl
 
+  if command -v "$cmd_name" &> /dev/null; then
+    if [[ -n "$alias_name" && "$alias_name" != "$cmd_name" ]]; then
+      alias "$alias_name"="$cmd_name"
+    fi
+
+    # Define the loader function dynamically
+    # The name of this loader function will be, e.g., __lazy_loader_kubectl
+    eval "
+    __lazy_loader_${cmd_name}() {
+      compdef -d \"$cmd_name\" # Deregister this loader for the main command
+      if [[ -n \"$alias_name\" && \"$alias_name\" != \"$cmd_name\" ]]; then
+        compdef -d \"$alias_name\" # Deregister for alias too
+      fi
+      source <($comp_src_cmd)
+      # After sourcing, the actual completion function (e.g., _kubectl) should be defined.
+      # We then call it.
+      \$comp_func_name \"\$@\"
+    }
+    "
+    compdef "__lazy_loader_${cmd_name}" "$cmd_name"
+    if [[ -n "$alias_name" && "$alias_name" != "$cmd_name" ]]; then
+      compdef "__lazy_loader_${cmd_name}" "$alias_name"
+    fi
+  fi
+}
+
+# ========== docker ==========
+lazy_load_completion_command "docker" "dk" "docker completion zsh" "_docker"
 
 # ========== kubectl ==========
-if command -v kubectl &> /dev/null; then
-  source <(kubectl completion zsh)
-  alias k=kubectl
-fi
-
+lazy_load_completion_command "kubectl" "k" "kubectl completion zsh" "_kubectl"
 
 # ========== podman ==========
-if command -v podman &> /dev/null; then
-  source <(podman completion zsh)
-fi
-
-# ========== terraform ==========
-if command -v terraform &> /dev/null; then
-  autoload -U +X bashcompinit && bashcompinit
-  complete -o nospace -C $(which terraform) terraform
-fi
+lazy_load_completion_command "podman" "" "podman completion zsh" "_podman"
 
 # ========== colima ==========
 if command -v colima &> /dev/null; then
-  # Check if colima profile 'k8s' is running without printing messages
-  if colima status --profile k8s &> /dev/null; then
-    source <(colima completion zsh)
-  fi
+  _colima_completion_loader() {
+    compdef -d colima
+    if colima status --profile k8s &> /dev/null; then
+      source <(colima completion zsh)
+      _colima "$@" # Assuming colima completion zsh defines _colima
+    else
+      # echo "Colima k8s profile not running, no completions." >&2 # Optional debug
+      return 1 # Indicate completion failed
+    fi
+  }
+  compdef _colima_completion_loader colima
 fi
 
 # ========== nerdctl ==========
-if command -v nerdctl &> /dev/null; then
-  source <(nerdctl completion zsh)
-  alias nerd=nerdctl
-fi
+lazy_load_completion_command "nerdctl" "nerd" "nerdctl completion zsh" "_nerdctl" # Assuming _nerdctl
 
 # ========== taskfile =========
-if command -v task &> /dev/null; then
-  source <(task --completion zsh)
-fi
-
-# ========== argocd ==========
-if command -v argocd &> /dev/null; then
-  alias argocd="__lazy_argocd"
-  __lazy_argocd() {
-      source <(argocd completion zsh)
-      compdef _argocd argocd
-      argocd "$@"
-  }
-fi
-
+lazy_load_completion_command "task" "" "task --completion zsh" "_task" # Assuming _task
 
 # ========== helm ==========
-if command -v helm &> /dev/null; then
-  source <(helm completion zsh)
-fi
+lazy_load_completion_command "helm" "" "helm completion zsh" "_helm"
 
 # bind home & end key
 bindkey "^[[H" beginning-of-line
@@ -102,12 +109,11 @@ export LC_TIME=en_US.UTF-8'
 en_locale
 
 # ========== fzf ==========
+# fzf setup is usually fast, but if it's a problem, this is where it is.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 
 # ========== powerlevel10k ==========
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 
 # tmux
 export TMUX_PLUGIN_MANAGER_PATH=${HOME}/.tmux/plugins/tpm/
@@ -134,52 +140,9 @@ then
   alias tree="eza --icons=always --tree"
 fi
 
-# fzf
 if command -v fzf &> /dev/null;
 then
     eval "$(fzf --zsh)"
-    # export FZF_DEFAULT_OPTS="--layout=reverse \
-    # --info=inline \
-    # --height=80% \
-    # --multi \
-    # --prompt='∼ ' \
-    # --pointer='▶' \
-    # --marker='✓' \
-    # --bind '?:toggle-preview' \
-    # --bind 'ctrl-a:select-all' \
-    # --bind 'ctrl-e:execute(vim {+} >/dev/tty)' \
-    # --bind 'ctrl-v:execute(code {+})'"
-
-    # show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
-
-    # # export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-    # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    # export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
-    # export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-    # export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
-
-    # _fzf_compgen_path() {
-    #   fd --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
-    # }
-
-    # _fzf_compgen_dir() {
-    #   fd --type d --hidden --follow --exclude ".git" --exclude "node_modules" . ~ "$1"
-    # }
-
-
-    # _fzf_comprun() {
-    #   local command=$1
-    #   shift
-
-    #   case "$command" in
-    #     cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
-    #     export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
-    #     ssh)          fzf --preview 'dig {}'                   "$@" ;;
-    #     *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
-    #   esac
-    # }
-
-    # zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 fi
 
 if command -v zoxide &> /dev/null;
@@ -188,12 +151,13 @@ then
    alias cd="z"
 fi
 
-
 if [[ "$OSTYPE" != "darwin"* ]]; then
     alias pbcopy='xclip -selection clipboard -r'
     alias pbpaste='xclip -selection clipboard -o'
 fi
 
-
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
+
+# Unset the helper function if you don't need it elsewhere
+unset -f lazy_load_completion_command
