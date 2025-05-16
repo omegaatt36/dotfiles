@@ -23,6 +23,15 @@ install_packages() {
             DISTRO_INSTALL="$(check_sudo) apt install -y $*"
         elif [[ "$ID" == "opensuse" || "$ID" == "opensuse-tumbleweed" ]]; then
             DISTRO_INSTALL="$(check_sudo) zypper in -y $*"
+        elif [[ "$ID" == "rhel" || "$ID" == "centos" || "$ID" == "rocky" || "$ID" == "fedora" || "$ID_LIKE" == *"rhel"* || "$ID_LIKE" == *"fedora"* ]]; then
+            if command -v dnf &> /dev/null; then
+                DISTRO_INSTALL="$(check_sudo) dnf install -y $*"
+            elif command -v yum &> /dev/null; then
+                DISTRO_INSTALL="$(check_sudo) yum install -y $*"
+            else
+                echo "Neither dnf nor yum found on this RHEL-like system."
+                exit 1
+            fi
         else
             echo "Unknown distribution. Cannot install packages."
             exit 1
@@ -68,6 +77,7 @@ function install_helm-ls() {
     esac
 
     if command -v jq &> /dev/null; then
+        echo "use jq"
     else
         echo "jq not found, attempting fallback URL extraction with grep/awk..."
     fi
@@ -239,6 +249,5 @@ function install_vimplugin() {
 function install_fzf() {
   git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}"/.fzf
   curl https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh -o ${HOME}/.fzf/fzf-git.sh
-  https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh
   "${HOME}"/.fzf/install
 }
