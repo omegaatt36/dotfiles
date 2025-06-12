@@ -369,7 +369,7 @@
             "font_weight": null
           }
         },
-        "terminal.background": "#12121266",
+        "terminal.background": "#121212aa",
         "terminal.foreground": null,
         "terminal.bright_foreground": null,
         "terminal.dim_foreground": null,

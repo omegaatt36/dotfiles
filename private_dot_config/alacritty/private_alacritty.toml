@@ -29,19 +29,15 @@ import = ["~/.config/alacritty/themes/themes/nord.toml"]
 [terminal.shell]
 program = "/bin/zsh"
 #args = ["-l", "-c", 'tmux attach || tmux -l']
-args = [
-  "-l", 
-  "-c", 
-  'zellij attach --index 0 || zellij'
-]
+args = ["-l", "-c", 'zellij attach -c alacritty']
 
 [keyboard]
 bindings = [
-  { key = "D", mods = "Control", chars = "\u0018\u0063" },
-  { key = "'", mods = "Control", chars = "\u0018\u0022" },
-  { key = "%", mods = "Control", chars = "\u0018\u0025" },
-  { key = "Right", mods = "Alt", chars = "\u001BF" },
-  { key = "Left", mods = "Alt", chars = "\u001BB" }
+    { key = "D", mods = "Control", chars = "\u0018\u0063" },
+    { key = "'", mods = "Control", chars = "\u0018\u0022" },
+    { key = "%", mods = "Control", chars = "\u0018\u0025" },
+    { key = "Right", mods = "Alt", chars = "\u001BF" },
+    { key = "Left", mods = "Alt", chars = "\u001BB" },
 ]
 
 [terminal]

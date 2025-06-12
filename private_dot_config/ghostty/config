@@ -6,6 +6,7 @@ font-thicken = true
 font-size = 16
 font-family = "MesloLGS Nerd Font"
 grapheme-width-method = "unicode"
+background-opacity = 0.5
 
 ## theme
 theme = nord
@@ -22,7 +23,9 @@ window-padding-balance = true
 
 ## shell
 shell-integration = zsh
-command=~/dotfiles/.script/ghostty-tmux.sh
+command=/bin/zsh -l -c zellij attach -c ghostty
+quit-after-last-window-closed = true
+# confirm-close-surface = false
 
 ## cursor
 cursor-style = "bar"

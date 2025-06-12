@@ -6,9 +6,9 @@
       "ctrl-f11": "editor::GoToImplementationSplit",
       "shift-f12": "editor::GoToDeclaration",
       "ctrl-r": "outline::Toggle",
-      "ctrl-pageup": "pane::ActivatePrevItem",
+      "ctrl-pageup": "pane::ActivatePreviousItem",
       "ctrl-pagedown": "pane::ActivateNextItem",
-      "cmd-pageup": "pane::ActivatePrevItem",
+      "cmd-pageup": "pane::ActivatePreviousItem",
       "cmd-pagedown": "pane::ActivateNextItem",
       "cmd-y": "editor::Redo"
     }
