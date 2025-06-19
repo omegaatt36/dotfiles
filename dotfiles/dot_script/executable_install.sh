@@ -169,7 +169,7 @@ function install_rust() {
 
 function install_go() {
     cd "${HOME}" || exit 1
-    local go_version="1.24.2"
+    local go_version="1.24.4"
     local os_type=$(uname -s)
     local arch_type=$(uname -m)
     local go_os_arch
@@ -207,6 +207,19 @@ function install_go() {
     # clearup and exit
     rm "go${go_version}.${go_os_arch}.tar.gz"
     cd - || exit 1
+}
+
+function install_golang_tools() {
+    go install golang.org/x/tools/gopls@latest
+    go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+    go install github.com/daixiang0/gci@latest
+    go install golang.org/x/tools/cmd/goimports@latest
+    go install github.com/go-delve/delve/cmd/dlv@latest
+    go install github.com/mgechev/revive@latest
+    go install github.com/itchyny/gojq/cmd/gojq@latest
+    go install honnef.co/go/tools/cmd/staticcheck@latest
+    go install github.com/client9/misspell/cmd/misspell@latest
+    go install go.uber.org/mock/mockgen@latest
 }
 
 function install_tmux() {
