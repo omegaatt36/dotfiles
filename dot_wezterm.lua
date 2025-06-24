@@ -17,7 +17,7 @@ config.window_padding = {
 config.hide_tab_bar_if_only_one_tab = true
 config.enable_tab_bar = false
 
-config.default_prog = {"/bin/zsh", "-l", "-c", 'tmux attach || tmux -l'}
+config.default_prog = {"/bin/zsh", "-l", "-c", 'zellij attach -c wezterm'}
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
     return 'Tab ' .. tab.tab_index
