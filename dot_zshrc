@@ -156,6 +156,11 @@ then
     eval "$(atuin init zsh)"
 fi
 
+if command -v mise &> /dev/null;
+then
+    eval "$(mise activate zsh)"
+fi
+
 if [[ "$OSTYPE" != "darwin"* ]]; then
     alias pbcopy='xclip -selection clipboard -r'
     alias pbpaste='xclip -selection clipboard -o'
