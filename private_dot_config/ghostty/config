@@ -5,6 +5,7 @@ scrollback-limit = 100000
 font-thicken = true
 font-size = 16
 font-family = "MesloLGS Nerd Font"
+font-style = "Regular"
 grapheme-width-method = "unicode"
 background-opacity = 0.5
 

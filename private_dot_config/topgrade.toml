@@ -16,7 +16,7 @@
 
 # Disable specific steps - same options as the command line flag
 # disable = ["system", "emacs"]
-disable = ["containers", "uv"]
+disable = ["containers", "uv", "node"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
