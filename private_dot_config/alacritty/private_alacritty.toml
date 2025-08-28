@@ -38,6 +38,26 @@ bindings = [
     { key = "%", mods = "Control", chars = "\u0018\u0025" },
     { key = "Right", mods = "Alt", chars = "\u001BF" },
     { key = "Left", mods = "Alt", chars = "\u001BB" },
+
+    # ── platform Copy / Paste ─────────────────────────────────────────────
+    # Linux：Ctrl+Shift+C / V
+    { key = "C", mods = "Control|Shift", action = "Copy"  },
+    { key = "V", mods = "Control|Shift", action = "Paste" },
+
+    # macOS：Cmd (Super) + C / V
+    { key = "C", mods = "Super", action = "Copy"  },
+    { key = "V", mods = "Super", action = "Paste" },
+
+    # ── Vi Mode ─────────────────────────────────────────
+    # enter Vi Mode（Ctrl+Shift+Space / Cmd+Shift+Space）
+    { key = "Space", mods = "Control|Shift", action = "ToggleViMode" },
+    { key = "Space", mods = "Super|Shift",   action = "ToggleViMode" },
+
+    # in Vi Mode ：v select、y copy、q / Esc exit
+    { key = "V", mods = "None", action = "ToggleNormalSelection", mode = "Vi" },
+    { key = "Y", mods = "None", action = "Copy",                  mode = "Vi" },
+    { key = "Q", mods = "None", action = "ToggleViMode",          mode = "Vi" },
+    { key = "Escape", mods = "None", action = "ToggleViMode",     mode = "Vi" }
 ]
 
 [terminal]

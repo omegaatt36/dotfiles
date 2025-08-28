@@ -166,6 +166,21 @@ if [[ "$OSTYPE" != "darwin"* ]]; then
     alias pbpaste='xclip -selection clipboard -o'
 fi
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+elif command -v wl-copy >/dev/null 2>&1; then
+    alias copy='wl-copy'
+    alias paste='wl-paste'
+    alias pbcopy='wl-copy'
+    alias pbpast='wl-paste'
+elif command -v xclip >/dev/null 2>&1; then
+    alias copy='xclip -selection clipboard -r'
+    alias paste='xclip -selection clipboard -o'
+    alias pbcopy='xclip -selection clipboard -r'
+    alias pbpaste='xclip -selection clipboard -o'
+fi
+
 
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
