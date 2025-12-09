@@ -2,6 +2,10 @@
   {
     "context": "Editor",
     "bindings": {
+      "cmd-shift-g": [
+        "task::Spawn",
+        { "task_name": "LazyGit", "reveal_target": "center" }
+      ],
       "ctrl-f12": "editor::GoToImplementation",
       "ctrl-f11": "editor::GoToImplementationSplit",
       "shift-f12": "editor::GoToDeclaration",
