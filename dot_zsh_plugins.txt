@@ -1,0 +1,9 @@
+# theme (must load first, not deferred)
+romkatv/powerlevel10k
+
+# plugins (deferred for faster startup)
+zsh-users/zsh-autosuggestions kind:defer
+zsh-users/zsh-syntax-highlighting kind:defer
+zsh-users/zsh-history-substring-search kind:defer
+Aloxaf/fzf-tab kind:defer
+sobolevn/wakatime-zsh-plugin kind:defer

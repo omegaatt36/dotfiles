@@ -3,55 +3,149 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# ========== mise (formerly rtx) ==========
-# Initialize mise early to ensure paths are set up correctly
-if command -v mise &> /dev/null; then
-    eval "$(mise activate zsh)"
+# ========== mise ==========
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+    export PATH="$HOME/.local/share/mise/shims:$PATH"
 fi
 
-# ========== oh-my-zsh ==========
-export ZSH="${HOME}/.oh-my-zsh"
-POWERLEVEL9K_MODE='nerdfont-complete'
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# history
+HISTFILE="${HOME}/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt share_history
 
+# directories
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushdminus
+
+# completion
+zmodload -i zsh/complist
+autoload -Uz compinit
+# Only regenerate .zcompdump once a day
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+
+# ========== antidote ==========
+POWERLEVEL9K_MODE='nerdfont-complete'
 export ZSH_WAKATIME_BIN=/usr/local/bin/wakatime-cli
 
-plugins=(
-    git
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-    history-substring-search
-    fzf-tab
-    wakatime
-)
+source "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh"
+antidote load
 
-source $ZSH/oh-my-zsh.sh
+# ========== git aliases (from oh-my-zsh git plugin) ==========
+function git_current_branch() {
+  local ref
+  ref=$(command git symbolic-ref --quiet HEAD 2>/dev/null) || \
+  ref=$(command git rev-parse --short HEAD 2>/dev/null) || return
+  echo ${ref#refs/heads/}
+}
 
-# Function to lazy load completions
-# Usage: lazy_load_completion_command "command_name" "alias_name_if_any" "completion_sourcing_command" "completion_function_name"
-# Example: lazy_load_completion_command "kubectl" "k" "kubectl completion zsh" "_kubectl"
+function git_main_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local ref
+  for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default,stable,master}; do
+    if command git show-ref -q --verify $ref; then
+      echo ${ref:t}
+      return 0
+    fi
+  done
+  echo master
+  return 1
+}
+
+function git_develop_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local branch
+  for branch in dev devel develop development; do
+    if command git show-ref -q --verify refs/heads/$branch; then
+      echo $branch
+      return 0
+    fi
+  done
+  echo develop
+  return 1
+}
+
+alias g='git'
+alias ga='git add'
+alias gaa='git add --all'
+alias gst='git status'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gc='git commit --verbose'
+alias gca='git commit --verbose --all'
+alias 'gca!'='git commit --verbose --all --amend'
+alias 'gcan!'='git commit --verbose --all --no-edit --amend'
+alias gcmsg='git commit --message'
+alias gcam='git commit --all --message'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gcm='git checkout $(git_main_branch)'
+alias gcd='git checkout $(git_develop_branch)'
+alias gsw='git switch'
+alias gswc='git switch --create'
+alias gp='git push'
+alias 'gpf!'='git push --force'
+alias gpf='git push --force-with-lease --force-if-includes'
+alias gl='git pull'
+alias gup='git pull --rebase'
+alias gm='git merge'
+alias grb='git rebase'
+alias grbi='git rebase --interactive'
+alias glog='git log --oneline --decorate --graph'
+alias glg='git log --stat'
+alias glga='git log --oneline --decorate --graph --all'
+alias gb='git branch'
+alias gba='git branch --all'
+alias gbd='git branch --delete'
+alias gbD='git branch --delete --force'
+alias gsta='git stash push'
+alias gstp='git stash pop'
+alias gstl='git stash list'
+alias gcp='git cherry-pick'
+alias gcpa='git cherry-pick --abort'
+alias gcpc='git cherry-pick --continue'
+alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'
+alias ggsup='git branch --set-upstream-to=origin/$(git_current_branch)'
+alias ggpush='git push origin "$(git_current_branch)"'
+alias ggpull='git pull origin "$(git_current_branch)"'
+
+# ========== lazy load completions ==========
 lazy_load_completion_command() {
   local cmd_name="$1"
-  local alias_name="$2" # Can be empty if no alias or same as cmd_name
+  local alias_name="$2"
   local comp_src_cmd="$3"
-  local comp_func_name="$4" # The function Zsh will call for completion, e.g., _kubectl
+  local comp_func_name="$4"
 
   if command -v "$cmd_name" &> /dev/null; then
     if [[ -n "$alias_name" && "$alias_name" != "$cmd_name" ]]; then
       alias "$alias_name"="$cmd_name"
     fi
 
-    # Define the loader function dynamically
-    # The name of this loader function will be, e.g., __lazy_loader_kubectl
     eval "
     __lazy_loader_${cmd_name}() {
-      compdef -d \"$cmd_name\" # Deregister this loader for the main command
+      compdef -d \"$cmd_name\"
       if [[ -n \"$alias_name\" && \"$alias_name\" != \"$cmd_name\" ]]; then
-        compdef -d \"$alias_name\" # Deregister for alias too
+        compdef -d \"$alias_name\"
       fi
       source <($comp_src_cmd)
-      # After sourcing, the actual completion function (e.g., _kubectl) should be defined.
-      # We then call it.
       \$comp_func_name \"\$@\"
     }
     "
@@ -67,7 +161,6 @@ lazy_load_completion_command "docker" "dk" "docker completion zsh" "_docker"
 
 # ========== kubectl ==========
 lazy_load_completion_command "kubectl" "k" "kubectl completion zsh" "_kubectl"
-# https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # ========== podman ==========
@@ -79,27 +172,47 @@ if command -v colima &> /dev/null; then
     compdef -d colima
     if colima status --profile k8s &> /dev/null; then
       source <(colima completion zsh)
-      _colima "$@" # Assuming colima completion zsh defines _colima
+      _colima "$@"
     else
-      # echo "Colima k8s profile not running, no completions." >&2 # Optional debug
-      return 1 # Indicate completion failed
+      return 1
     fi
   }
   compdef _colima_completion_loader colima
 fi
 
 # ========== nerdctl ==========
-lazy_load_completion_command "nerdctl" "nerd" "nerdctl completion zsh" "_nerdctl" # Assuming _nerdctl
+lazy_load_completion_command "nerdctl" "nerd" "nerdctl completion zsh" "_nerdctl"
 
 # ========== taskfile =========
-lazy_load_completion_command "task" "" "task --completion zsh" "_task" # Assuming _task
+lazy_load_completion_command "task" "" "task --completion zsh" "_task"
 
 # ========== helm ==========
 lazy_load_completion_command "helm" "" "helm completion zsh" "_helm"
 
-# bind home & end key
+unset -f lazy_load_completion_command
+
+# ========== key bindings ==========
+bindkey -e
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
+
+# Ctrl+Arrow for word navigation
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+
+# Up/Down arrow for history substring search
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
+
+# Edit command line in $EDITOR
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
+
+# ========== locale ==========
 alias zh_locale='
 export LC_ALL=zh_TW.UTF-8
 export LANG=zh_TW.UTF-8
@@ -118,7 +231,6 @@ en_locale
 
 # ========== fzf ==========
 if command -v fzf &> /dev/null; then
-   # Use fzf --zsh if available (fzf 0.48+)
    if fzf --zsh &> /dev/null; then
       eval "$(fzf --zsh)"
    elif [ -f ~/.fzf.zsh ]; then
@@ -129,6 +241,7 @@ fi
 # ========== powerlevel10k ==========
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# ========== PATH exports ==========
 # tmux
 export TMUX_PLUGIN_MANAGER_PATH=${HOME}/.tmux/plugins/tpm/
 
@@ -145,7 +258,7 @@ export PATH=$PATH:/usr/local/zen
 # npm
 export PATH="${HOME}/.npm-global/bin":"${PATH}"
 
-# rust
+# ========== rust & modern cli tools ==========
 [ -f ${HOME}/.cargo/env ] && source ${HOME}/.cargo/env
 if command -v bat &> /dev/null; then alias cat=bat; fi
 if command -v eza &> /dev/null;
@@ -157,27 +270,35 @@ fi
 
 if command -v rg &> /dev/null; then alias grep=rg; fi
 
-if command -v fzf &> /dev/null;
-then
-   eval "$(fzf --zsh)"
-fi
-
+# ========== zoxide ==========
 if command -v zoxide &> /dev/null;
 then
+    export _ZO_DOCTOR=0
     eval "$(zoxide init zsh --cmd cd)"
 fi
 
+# ========== atuin ==========
 if command -v atuin &> /dev/null;
 then
     eval "$(atuin init zsh)"
 fi
 
-# Clipboard configuration
+# ========== bun ==========
+[ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# ========== uv ==========
+if command -v uv &> /dev/null; then eval "$(uv generate-shell-completion zsh)"; fi
+
+# ========== zb ==========
+if command -v zb &> /dev/null; then eval "$(zb completion zsh)"; fi
+
+# ========== clipboard ==========
 if [[ "$OSTYPE" == "darwin"* ]]; then
     alias copy='pbcopy'
     alias paste='pbpaste'
 else
-    # Linux / Other
     if command -v wl-copy >/dev/null 2>&1; then
         alias copy='wl-copy'
         alias paste='wl-paste'
@@ -191,12 +312,8 @@ else
     fi
 fi
 
-
 # ========== other env ==========
 [[ ! -f ~/.zsh_other_env ]] || source ~/.zsh_other_env
-
-# Unset the helper function if you don't need it elsewhere
-unset -f lazy_load_completion_command
 
 # Added by Antigravity
 export PATH="/Users/raiven_kao/.antigravity/antigravity/bin:$PATH"

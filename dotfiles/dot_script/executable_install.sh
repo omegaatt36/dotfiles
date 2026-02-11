@@ -169,7 +169,7 @@ function install_rust() {
 
 function install_go() {
     cd "${HOME}" || exit 1
-    local go_version="1.25.3"
+    local go_version="1.26.0"
     local os_type=$(uname -s)
     local arch_type=$(uname -m)
     local go_os_arch
@@ -240,14 +240,10 @@ function install_zsh() {
     fi
 
     install_packages git curl
-    RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y
 
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
-    git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
-    git clone https://github.com/sobolevn/wakatime-zsh-plugin.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/wakatime
-    git clone --depth 1 https://github.com/unixorn/fzf-zsh-plugin.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-zsh-plugin
-    git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/fzf-tab
+    git clone --depth=1 https://github.com/mattmc3/antidote.git \
+        ${ZDOTDIR:-$HOME}/.antidote
+
     ./bin/chezmoi update --force
     zsh -c 'source "${HOME}/.zshrc"; exec zsh'
 }
