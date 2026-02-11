@@ -8,6 +8,8 @@ if [ -d "$HOME/.local/share/mise/shims" ]; then
     export PATH="$HOME/.local/share/mise/shims:$PATH"
 fi
 
+# ========== zsh options (replaces oh-my-zsh lib/) ==========
+
 # history
 HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=50000
@@ -126,6 +128,26 @@ alias grt='cd "$(git rev-parse --show-toplevel || echo .)"'
 alias ggsup='git branch --set-upstream-to=origin/$(git_current_branch)'
 alias ggpush='git push origin "$(git_current_branch)"'
 alias ggpull='git pull origin "$(git_current_branch)"'
+
+function ggp() {
+  if [[ $# != 0 ]] && [[ $# != 1 ]]; then
+    git push origin "${*}"
+  else
+    local b
+    [[ $# == 0 ]] && b="$(git_current_branch)"
+    git push origin "${b:-$1}"
+  fi
+}
+
+function ggl() {
+  if [[ $# != 0 ]] && [[ $# != 1 ]]; then
+    git pull origin "${*}"
+  else
+    local b
+    [[ $# == 0 ]] && b="$(git_current_branch)"
+    git pull origin "${b:-$1}"
+  fi
+}
 
 # ========== lazy load completions ==========
 lazy_load_completion_command() {
@@ -289,10 +311,16 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # ========== uv ==========
-if command -v uv &> /dev/null; then eval "$(uv generate-shell-completion zsh)"; fi
+if command -v uv &> /dev/null;
+then
+    eval "$(uv generate-shell-completion zsh)"
+fi
 
 # ========== zb ==========
-if command -v zb &> /dev/null; then eval "$(zb completion zsh)"; fi
+if command -v zb &> /dev/null;
+then
+    eval "$(zb completion zsh)"
+fi
 
 # ========== clipboard ==========
 if [[ "$OSTYPE" == "darwin"* ]]; then
