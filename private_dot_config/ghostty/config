@@ -1,5 +1,6 @@
 ## common
 scrollback-limit = 100000
+term = "xterm-ghostty"
 
 ## font
 font-thicken = true
@@ -10,9 +11,9 @@ grapheme-width-method = "unicode"
 background-opacity = 0.5
 
 ## theme
-theme = nord
+theme = Flexoki Dark
 adjust-cell-width = -5%
-background-opacity = 0.75
+background-opacity = 0.85
 background-blur-radius = 20
 window-decoration = false
 window-padding-x = 18
