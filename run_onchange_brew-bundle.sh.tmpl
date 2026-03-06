@@ -1,0 +1,14 @@
+#!/bin/bash
+# Brewfile hash: {{ include (joinPath .chezmoi.homeDir ".Brewfile") | sha256sum }}
+{{ if eq .chezmoi.os "darwin" -}}
+set -e
+
+if ! command -v brew &>/dev/null; then
+  echo "Homebrew not found, skipping brew bundle."
+  exit 0
+fi
+
+echo "Running brew bundle..."
+brew bundle --file="${HOME}/.Brewfile" --no-lock
+echo "brew bundle done."
+{{- end }}

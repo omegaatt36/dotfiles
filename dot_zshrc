@@ -44,6 +44,9 @@ zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
 
+# word splitting: treat special chars (including /) as word boundaries
+WORDCHARS=''
+
 # ========== antidote ==========
 POWERLEVEL9K_MODE='nerdfont-complete'
 export ZSH_WAKATIME_BIN=/usr/local/bin/wakatime-cli
