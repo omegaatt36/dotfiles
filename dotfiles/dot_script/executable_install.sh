@@ -169,7 +169,7 @@ function install_rust() {
 
 function install_go() {
     cd "${HOME}" || exit 1
-    local go_version="1.26.0"
+    local go_version="1.26.1"
     local os_type=$(uname -s)
     local arch_type=$(uname -m)
     local go_os_arch
@@ -219,6 +219,7 @@ function install_golang_tools() {
     go install github.com/itchyny/gojq/cmd/gojq@latest
     go install honnef.co/go/tools/cmd/staticcheck@latest
     go install github.com/client9/misspell/cmd/misspell@latest
+    go install mvdan.cc/gofumpt@latest
     go install go.uber.org/mock/mockgen@latest
 }
 
