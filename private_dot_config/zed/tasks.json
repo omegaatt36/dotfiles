@@ -3,80 +3,165 @@
     "label": "LazyGit",
     "command": "lazygit",
     "shell": {
-      "program": "sh"
+      "program": "sh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
+    "use_new_terminal": true,
   },
   {
     "label": "Git UI",
     "command": "gitui",
     "shell": {
-      "program": "sh"
+      "program": "sh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
+    "use_new_terminal": true,
   },
   {
     "label": "rustlings",
     "command": "rustlings",
     "shell": {
-      "program": "sh"
+      "program": "sh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Crush",
+    "command": "crush",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Gemini",
+    "command": "gemini",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Gemini YOLO",
+    "command": "gemini --yolo",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
   },
   {
     "label": "Claude Code",
     "command": "claude",
     "shell": {
-      "program": "zsh"
+      "program": "zsh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
+    "use_new_terminal": true,
   },
   {
-    "label": "Claude Code Resume",
-    "command": "claude --resume",
+    "label": "Claude Code by pass",
+    "command": "claude --dangerously-skip-permissions",
     "shell": {
-      "program": "zsh"
+      "program": "zsh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Claude Code Continue",
+    "command": "claude --continue",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Claude Code Continue by pass",
+    "command": "claude --continue --dangerously-skip-permissions",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
   },
   {
     "label": "Codex",
     "command": "codex",
     "shell": {
-      "program": "zsh"
+      "program": "zsh",
     },
     "hide": "on_success",
     "reveal_target": "center",
     "show_summary": false,
     "show_command": false,
     "allow_concurrent_runs": true,
-    "use_new_terminal": true
-  }
+    "use_new_terminal": true,
+  },
+  {
+    "label": "OpenCode",
+    "command": "bunx opencode",
+    "shell": {
+      "program": "zsh",
+    },
+    "hide": "on_success",
+    "reveal_target": "center",
+    "show_summary": false,
+    "show_command": false,
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Television File Finder",
+    "command": "zed \"$(tv files)\"",
+    "hide": "always",
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+  },
 
   // {
   //   "label": "Test current package",
