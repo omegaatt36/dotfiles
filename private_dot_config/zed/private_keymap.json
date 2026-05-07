@@ -4,7 +4,7 @@
     "bindings": {
       "cmd-shift-g": [
         "task::Spawn",
-        { "task_name": "LazyGit", "reveal_target": "center" }
+        { "task_name": "LazyGit", "reveal_target": "center" },
       ],
       "ctrl-f12": "editor::GoToImplementation",
       "ctrl-f11": "editor::GoToImplementationSplit",
@@ -14,8 +14,12 @@
       "ctrl-pagedown": "pane::ActivateNextItem",
       "cmd-pageup": "pane::ActivatePreviousItem",
       "cmd-pagedown": "pane::ActivateNextItem",
-      "cmd-y": "editor::Redo"
-    }
+      "cmd-y": "editor::Redo",
+      "ctrl-left": "editor::MoveToPreviousWordStart",
+      "ctrl-right": "editor::MoveToNextWordEnd",
+      "ctrl-shift-left": "editor::SelectToPreviousWordStart",
+      "ctrl-shift-right": "editor::SelectToNextWordEnd",
+    },
   },
   {
     "context": "ProjectPanel",
@@ -23,8 +27,57 @@
       "ctrl-.": "project_panel::NewFile",
       "ctrl-,": "project_panel::NewDirectory",
       "f2": "project_panel::Rename",
-      // "ctrl-shift-c": "project_panel::CopyPath",
-      "enter": "project_panel::Open"
-    }
-  }
+      "enter": "project_panel::Open",
+    },
+  },
+  // {
+  //   "bindings": {
+  //     "cmd-p": [
+  //       "task::Spawn",
+  //       { "task_name": "Television File Finder", "reveal_target": "center" }
+  //     ]
+  //   }
+  // }
+  {
+    "context": "AcpThread > (Editor && use_modifier_to_send)",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "AcpThread > (Editor && !use_modifier_to_send)",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "(MessageEditor && !Picker) > (Editor && use_modifier_to_send)",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "(MessageEditor && !Picker) > (Editor && !use_modifier_to_send)",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "(Editor && editor_agent_diff)",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "AgentDiff",
+    "bindings": {
+      "cmd-shift-d": "agent::RejectAll",
+    },
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "cmd-shift-f": "workspace::NewSearch",
+    },
+  },
 ]
