@@ -10,7 +10,7 @@ config-version = 2
 after-startup-command = []
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -136,10 +136,9 @@ on-mode-changed = []
     alt-7 = 'workspace 7'
     alt-8 = 'workspace 8'
     alt-9 = 'workspace 9'
-    # App launchers (replaces skhd)
-    cmd-ctrl-b = 'exec-and-forget open -a "Zen Browser"'
-    cmd-ctrl-t = 'exec-and-forget open -a "Ghostty"'
-    cmd-ctrl-z = 'exec-and-forget open -a "Zed"'
+    # cmd-ctrl-b = 'exec-and-forget open -a "Zen Browser"'
+    # cmd-ctrl-t = 'exec-and-forget open -a "Ghostty"'
+    # cmd-ctrl-z = 'exec-and-forget open -a "Zed"'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -175,3 +174,13 @@ on-mode-changed = []
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+# Force tiling for AWS Azure Login auth webview (subprocess without bundle ID)
+[[on-window-detected]]
+if.app-name-regex-substring = 'aws-azure-login'
+run = 'layout tiling'
+
+# Keep Ghostty's native tabs out of AeroSpace's tiling layout.
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = 'layout floating'
