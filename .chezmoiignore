@@ -1,0 +1,6 @@
+{{ if ne .chezmoi.os "darwin" }}
+.Brewfile
+.config/aerospace
+.config/karabiner
+.config/sketchybar
+{{ end }}

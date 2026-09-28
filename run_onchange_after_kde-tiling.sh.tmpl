@@ -1,0 +1,127 @@
+#!/bin/bash
+# KDE Plasma 6 (Wayland): approximate the AeroSpace UX from
+# private_dot_config/aerospace/aerospace.toml using KWin + Polonium.
+# Modifier: AeroSpace `alt` (Option) -> KDE `Meta` (same physical position on a PC keyboard).
+{{ if eq .chezmoi.os "linux" -}}
+set -euo pipefail
+
+if [[ "${XDG_CURRENT_DESKTOP:-}" != *KDE* ]] || ! command -v kpackagetool6 &>/dev/null; then
+  echo "KDE Plasma 6 not detected, skipping kde-tiling."
+  exit 0
+fi
+
+POLONIUM_VERSION="v1.2.1"
+WORKSPACES=9
+
+# --- Polonium ---------------------------------------------------------------
+if ! kpackagetool6 --type KWin/Script --show polonium &>/dev/null; then
+  echo "Installing Polonium ${POLONIUM_VERSION}..."
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "${tmp}"' EXIT
+  curl -fsSL -o "${tmp}/polonium.kwinscript" \
+    "https://github.com/zeroxoneafour/polonium/releases/download/${POLONIUM_VERSION}/polonium.kwinscript"
+  kpackagetool6 --type KWin/Script --install "${tmp}/polonium.kwinscript"
+fi
+
+kwriteconfig6 --file kwinrc --group Plugins --key poloniumEnabled true
+# default-root-container-layout = 'tiles' -> BTree engine (0)
+kwriteconfig6 --file kwinrc --group Script-polonium --key DefaultEngine 0
+
+# --- Workspaces (persistent-workspaces 1..9) --------------------------------
+kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
+# Instant desktop switch like AeroSpace (the slide animation is tiring on a large screen)
+kwriteconfig6 --file kwinrc --group Plugins --key slideEnabled false
+qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect slide >/dev/null # reconfigure alone keeps it loaded
+count="$(qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.count)"
+while (( count < WORKSPACES )); do
+  qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.createDesktop "${count}" "$((count + 1))"
+  count=$((count + 1))
+done
+
+qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure
+
+# --- Gaps = 0 ---------------------------------------------------------------
+# A running KWin writes its in-memory [Tiling] padding back to kwinrc, so
+# editing the file is lost; set it through a one-shot KWin script instead.
+padding_js="$(mktemp --suffix=.js)"
+cat >"${padding_js}" <<'EOF'
+for (const output of workspace.screens) {
+  for (const desktop of workspace.desktops) {
+    const root = workspace.rootTile(output, desktop);
+    if (root) root.padding = 0;
+  }
+}
+EOF
+qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript kde-tiling-padding >/dev/null
+qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.loadScript "${padding_js}" kde-tiling-padding >/dev/null
+qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.start
+sleep 1
+qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript kde-tiling-padding >/dev/null
+rm -f "${padding_js}"
+
+# --- Shortcuts ---------------------------------------------------------------
+META=0x10000000
+SHIFT=0x02000000
+CTRL=0x04000000
+SCREENSAVER=0x010000BA
+
+# set_keys <component> <action> [qt-key-code...]  (no codes = unbind)
+set_keys() {
+  local component="$1" action="$2"
+  shift 2
+  local args=()
+  for key in "$@"; do
+    args+=(4 "$((key))" 0 0 0)
+  done
+  busctl --user call org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel \
+    setForeignShortcutKeys 'asa(ai)' 4 "${component}" "${action}" "" "" "$#" "${args[@]}"
+}
+
+# Polonium registers its shortcuts only after KWin loads the script.
+for _ in $(seq 1 20); do
+  qdbus6 org.kde.kglobalaccel /component/kwin org.kde.kglobalaccel.Component.shortcutNames \
+    | grep -qx PoloniumActivateLeft && break
+  sleep 0.5
+done
+
+# Free conflicting defaults first; kglobalaccel drops keys already taken.
+set_keys ksmserver "Lock Session" "${SCREENSAVER}" # was Meta+L
+for i in $(seq 1 9); do
+  set_keys plasmashell "activate task manager entry ${i}" # was Meta+<i>
+done
+
+# focus / move (alt-hjkl, alt-shift-hjkl)
+set_keys kwin PoloniumActivateLeft  $((META | 0x48))
+set_keys kwin PoloniumActivateBelow $((META | 0x4A))
+set_keys kwin PoloniumActivateAbove $((META | 0x4B))
+set_keys kwin PoloniumActivateRight $((META | 0x4C))
+set_keys kwin PoloniumPlaceLeft  $((META | SHIFT | 0x48))
+set_keys kwin PoloniumPlaceBelow $((META | SHIFT | 0x4A))
+set_keys kwin PoloniumPlaceAbove $((META | SHIFT | 0x4B))
+set_keys kwin PoloniumPlaceRight $((META | SHIFT | 0x4C))
+
+# resize: Polonium only has directional resize, no `resize smart`
+set_keys kwin PoloniumResizeLeft  $((META | CTRL | 0x48))
+set_keys kwin PoloniumResizeDown  $((META | CTRL | 0x4A))
+set_keys kwin PoloniumResizeUp    $((META | CTRL | 0x4B))
+set_keys kwin PoloniumResizeRight $((META | CTRL | 0x4C))
+
+# layout: alt-slash tiles, alt-comma accordion
+set_keys kwin PoloniumSetEngineBTree $((META | 0x2F)) # Meta+/
+set_keys kwin PoloniumSetEnginePager $((META | 0x2C)) # Meta+,
+# No horizontal <-> vertical toggle: PoloniumRotateLayout is commented out in v1.2.1.
+
+# service-mode `f`: floating <-> tiling
+set_keys kwin PoloniumToggleActiveTiling $((META | SHIFT | 0x20))
+
+# workspace N / move-node-to-workspace N
+# Shift+digit may arrive as the shifted symbol (US layout), so bind both.
+shifted=(0x21 0x40 0x23 0x24 0x25 0x5E 0x26 0x2A 0x28) # ! @ # $ % ^ & * (
+for i in $(seq 1 9); do
+  digit=$((0x30 + i))
+  set_keys kwin "Switch to Desktop ${i}" $((META | digit))
+  set_keys kwin "Window to Desktop ${i}" $((META | SHIFT | digit)) $((META | ${shifted[i - 1]}))
+done
+
+echo "kde-tiling done."
+{{- end }}
