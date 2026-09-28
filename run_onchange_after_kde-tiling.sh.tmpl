@@ -40,11 +40,12 @@ done
 
 qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure
 
-# --- Gaps = 0 ---------------------------------------------------------------
-# A running KWin writes its in-memory [Tiling] padding back to kwinrc, so
-# editing the file is lost; set it through a one-shot KWin script instead.
+# --- Desktop names 1..9, gaps = 0 -------------------------------------------
+# A running KWin writes its in-memory state (names, [Tiling] padding) back to
+# kwinrc, so editing the file is lost; set it through a one-shot KWin script.
 padding_js="$(mktemp --suffix=.js)"
 cat >"${padding_js}" <<'EOF'
+workspace.desktops.forEach((d, i) => { d.name = String(i + 1); });
 for (const output of workspace.screens) {
   for (const desktop of workspace.desktops) {
     const root = workspace.rootTile(output, desktop);
@@ -59,14 +60,19 @@ sleep 1
 qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript kde-tiling-padding >/dev/null
 rm -f "${padding_js}"
 
-# --- Task manager: show windows from all desktops (like the macOS Dock) ------
-# plasmashell writes its in-memory applet config back, so go through its scripting API.
+# --- Panel ------------------------------------------------------------------
+# Task manager shows windows from all desktops (like the macOS Dock); pager
+# shows desktop numbers (0 = Number). plasmashell writes its in-memory applet
+# config back, so go through its scripting API.
 qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
 for (const p of panels()) {
   for (const w of p.widgets()) {
-    if (w.type !== "org.kde.plasma.icontasks" && w.type !== "org.kde.plasma.taskmanager") continue;
     w.currentConfigGroup = ["General"];
-    w.writeConfig("showOnlyCurrentDesktop", false);
+    if (w.type === "org.kde.plasma.icontasks" || w.type === "org.kde.plasma.taskmanager") {
+      w.writeConfig("showOnlyCurrentDesktop", false);
+    } else if (w.type === "org.kde.plasma.pager") {
+      w.writeConfig("displayedText", 0);
+    }
   }
 }'
 
