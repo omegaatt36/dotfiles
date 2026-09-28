@@ -59,6 +59,17 @@ sleep 1
 qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript kde-tiling-padding >/dev/null
 rm -f "${padding_js}"
 
+# --- Task manager: show windows from all desktops (like the macOS Dock) ------
+# plasmashell writes its in-memory applet config back, so go through its scripting API.
+qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+for (const p of panels()) {
+  for (const w of p.widgets()) {
+    if (w.type !== "org.kde.plasma.icontasks" && w.type !== "org.kde.plasma.taskmanager") continue;
+    w.currentConfigGroup = ["General"];
+    w.writeConfig("showOnlyCurrentDesktop", false);
+  }
+}'
+
 # --- Shortcuts ---------------------------------------------------------------
 META=0x10000000
 SHIFT=0x02000000
