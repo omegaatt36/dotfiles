@@ -32,6 +32,10 @@ kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
 # Instant desktop switch like AeroSpace (the slide animation is tiring on a large screen)
 kwriteconfig6 --file kwinrc --group Plugins --key slideEnabled false
 qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect slide >/dev/null # reconfigure alone keeps it loaded
+# Only the primary screen switches desktops; windows on other screens stay on all desktops
+kwriteconfig6 --file kwinrc --group Plugins --key virtualdesktopsonlyonprimaryEnabled true
+# Alt+Tab lists windows from all desktops (0 = all, 1 = current only)
+kwriteconfig6 --file kwinrc --group TabBox --key DesktopMode 0
 count="$(qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.count)"
 while (( count < WORKSPACES )); do
   qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.createDesktop "${count}" "$((count + 1))"
